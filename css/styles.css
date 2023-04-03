@@ -23,6 +23,10 @@ h2 {
   margin: 0 0 1vmin 0;
 }
 
+h3 {
+  margin: 2vmin 0 -2vmin 0;
+}
+
 button {
   margin: 0 0 5vmin 0;
   padding: 1vmin 3vmin;
