@@ -11,10 +11,23 @@ body {
   text-align: center;
 }
 
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-weight: 600;
+}
+
+h2 {
+  margin: 0 0 1vmin 0;
+}
+
 .display {
   display: grid;
   grid-template-columns: 4vmin 1fr;
   grid-template-rows: 4vmin 1fr;
+  margin-bottom: 3vmin;
 }
 
 .col-headers {
@@ -45,5 +58,11 @@ body {
 .board > div {
   height: 5vmin;
   width: 5vmin;
-  border: 2px solid gray;
+  border: 0.1vmin solid gray;
+}
+
+#div-line {
+  border: 0.25vmin solid black;
+  margin: 3vmin 0;
+  width: 50%;
 }
