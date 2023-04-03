@@ -23,11 +23,23 @@ h2 {
   margin: 0 0 1vmin 0;
 }
 
+button {
+  margin: 0 0 5vmin 0;
+  padding: 1vmin 3vmin;
+  font-size: 2vmin;
+  border-radius: 1vmin;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
 .display {
   display: grid;
   grid-template-columns: 4vmin 1fr;
   grid-template-rows: 4vmin 1fr;
   margin-bottom: 3vmin;
+  font-size: 2vmin;
 }
 
 .col-headers {
