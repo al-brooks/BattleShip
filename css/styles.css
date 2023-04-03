@@ -78,3 +78,25 @@ button:hover {
   margin: 3vmin 0;
   width: 50%;
 }
+
+#ship-list {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+#ship-list > section {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+#colors {
+  margin-left: 2vmin;
+}
+
+#colors > div {
+  height: 1vmin;
+  width: 1vmin;
+  border: 1vmin solid black;
+}
