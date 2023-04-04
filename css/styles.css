@@ -33,6 +33,10 @@ h4 {
   width: 25vmin;
 }
 
+button:hover {
+  cursor: pointer;
+}
+
 .display {
   display: grid;
   grid-template-columns: 4vmin 1fr;
@@ -110,13 +114,9 @@ h4 {
   margin: 0 1vmin;
 }
 
-#playAgain {
+#play-again {
   margin: 0 0 5vmin 0;
   padding: 1vmin 3vmin;
   font-size: 2vmin;
   border-radius: 1vmin;
-}
-
-#playAgain:hover {
-  cursor: pointer;
 }
