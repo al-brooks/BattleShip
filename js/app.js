@@ -116,6 +116,9 @@ Player:
 let addShip;
 let resetShip;
 let completedShip;
+let setupComplete;
+
+let currentShip;
 
 let turn;
 let winner;
@@ -135,8 +138,11 @@ const playerBoardEls = document.querySelectorAll(
   "#player > .display > .board > div"
 );
 
+const playerBoardEl = document.querySelector("#player > .display > .board");
+
 /*----- event listeners -----*/
 shipListEls.addEventListener("click", handleShipSelection);
+playerBoardEl.addEventListener("click", handleBoardClick);
 
 /*----- functions -----*/
 
@@ -144,10 +150,33 @@ function handleShipSelection(evt) {
   const selectBtn = evt.target;
   if (selectBtn.classList.contains("add")) {
     console.log("Add Ship!");
+    addShip = true;
+    currentShip = player[selectBtn.parentNode.id];
+    // user clicks on board to select grids;
   } else if (selectBtn.classList.contains("reset")) {
     console.log("Reset!!");
   } else if (selectBtn.classList.contains("complete")) {
     console.log("Complete!!!");
+  }
+}
+
+function handleBoardClick(evt) {
+  const square = evt.target;
+  const colIdx = square.id.at(-3);
+  const rowIdx = square.id.at(-1);
+  if (addShip) {
+    handleAdd(square, colIdx, rowIdx);
+  }
+}
+
+function handleAdd(square, colIdx, rowIdx) {
+  if (currentShip.spaces === 0) return;
+  if (playerBoard[colIdx][rowIdx] === 0) {
+    console.log(currentShip);
+    playerBoard[colIdx][rowIdx] = currentShip;
+    console.log(playerBoard[colIdx][rowIdx]);
+    currentShip.spaces--;
+    render();
   }
 }
 
@@ -160,6 +189,7 @@ function init() {
   addShip = false;
   resetShip = false;
   completedShip = false;
+  setupComplete = false;
 }
 
 function render() {
