@@ -264,7 +264,7 @@ function checkHorizontal(colIdx, rowIdx) {
 // All the row nums are the same or all the col nums are. You can use that to check validity
 function countAdjacent(colIdx, rowIdx, colOffset, rowOffset) {
   let count = 1; // starting at a known coordinate
-  console.log(`Col: ${colIdx} Row: ${rowIdx}`);
+  //   console.log(`Col: ${colIdx} Row: ${rowIdx}`);
 
   // initialize coordinates
   colIdx += colOffset;
@@ -278,10 +278,10 @@ function countAdjacent(colIdx, rowIdx, colOffset, rowOffset) {
   ) {
     count++;
     colIdx += colOffset;
-    console.log(`Col: ${colIdx} Row: ${rowIdx}`);
+    // console.log(`Col: ${colIdx} Row: ${rowIdx}`);
     rowIdx += rowOffset;
   }
-  console.log(`Ship Coordinates: ${currentShip.coordinates}`);
+  //   console.log(`Ship Coordinates: ${currentShip.coordinates}`);
 
   return count;
 }
@@ -402,6 +402,7 @@ function buildAdjacent(ship, colIdx, rowIdx, colOffset, rowOffset) {
     colIdx += colOffset;
     rowIdx += rowOffset;
   }
+  console.log(computer[ship]);
 
   // we werent able to complete ship
   if (computer[ship].spacesLeft > 0) {
@@ -410,8 +411,7 @@ function buildAdjacent(ship, colIdx, rowIdx, colOffset, rowOffset) {
       computerBoard[col][row] = 0;
     }
     computer[ship].coordinates = [];
-    computer[ship].spacesLeft = ship.spacesTotal;
-
+    computer[ship].spacesLeft = computer[ship].spacesTotal;
     return false;
   } else {
     return true;
