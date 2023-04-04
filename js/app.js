@@ -34,31 +34,36 @@ const player = {
   carrier: {
     color: "black",
     hp: 5,
-    spaces: 5,
+    spacesTotal: 5,
+    spacesLeft: 5,
     coordinates: []
   },
   battleship: {
     color: "gray",
     hp: 4,
-    spaces: 4,
+    spacesTotal: 4,
+    spacesLeft: 4,
     coordinates: []
   },
   cruiser: {
     color: "navy",
     hp: 3,
-    spaces: 3,
+    spacesTotal: 3,
+    spacesLeft: 3,
     coordinates: []
   },
   submarine: {
     color: "darkred",
     hp: 3,
-    spaces: 3,
+    spacesTotal: 3,
+    spacesLeft: 3,
     coordinates: []
   },
   destroyer: {
     color: "darkgoldenrod",
     hp: 2,
-    spaces: 2,
+    spacesTotal: 2,
+    spacesLeft: 2,
     coordinates: []
   }
 };
@@ -66,27 +71,32 @@ const player = {
 const computer = {
   carrier: {
     hp: 5,
-    spaces: 5,
+    spacesTotal: 5,
+    spacesLeft: 5,
     coordinates: []
   },
   battleship: {
     hp: 4,
-    spaces: 4,
+    spacesTotal: 4,
+    spacesLeft: 4,
     coordinates: []
   },
   cruiser: {
     hp: 3,
-    spaces: 3,
+    spacesTotal: 3,
+    spacesLeft: 3,
     coordinates: []
   },
   submarine: {
     hp: 3,
-    spaces: 3,
+    spacesTotal: 3,
+    spacesLeft: 3,
     coordinates: []
   },
   destroyer: {
     hp: 2,
-    spaces: 2,
+    spacesTotal: 2,
+    spacesLeft: 2,
     coordinates: []
   }
 };
@@ -114,8 +124,6 @@ Player:
 /*----- state variables -----*/
 // boolean toggles for Player Ship Placement
 let addShip;
-let resetShip;
-let completedShip;
 let setupComplete;
 
 let currentShip;
@@ -130,6 +138,7 @@ let computerBoard;
 
 /*----- cached elements  -----*/
 const shipListEls = document.getElementById("ship-list");
+const shipListMsg = document.getElementById("shipMsg");
 const playAgainBtn = document.getElementById("play-again");
 const computerBoardEls = document.querySelectorAll(
   "#computer > .display > .board > div"
@@ -148,36 +157,129 @@ playerBoardEl.addEventListener("click", handleBoardClick);
 
 function handleShipSelection(evt) {
   const selectBtn = evt.target;
+  const shipSection = selectBtn.parentNode;
   if (selectBtn.classList.contains("add")) {
     console.log("Add Ship!");
     addShip = true;
-    currentShip = player[selectBtn.parentNode.id];
+    currentShip = player[shipSection.id];
     // user clicks on board to select grids;
   } else if (selectBtn.classList.contains("reset")) {
+    handleReset();
     console.log("Reset!!");
   } else if (selectBtn.classList.contains("complete")) {
-    console.log("Complete!!!");
+    handleComplete(shipSection);
   }
 }
 
 function handleBoardClick(evt) {
   const square = evt.target;
-  const colIdx = square.id.at(-3);
-  const rowIdx = square.id.at(-1);
+  const colIdx = Number(square.id.at(-3));
+  const rowIdx = Number(square.id.at(-1));
   if (addShip) {
+    console.log(addShip);
     handleAdd(square, colIdx, rowIdx);
+  } else {
+    return;
   }
 }
 
 function handleAdd(square, colIdx, rowIdx) {
-  if (currentShip.spaces === 0) return;
+  if (currentShip.spacesLeft === 0) return;
   if (playerBoard[colIdx][rowIdx] === 0) {
-    console.log(currentShip);
     playerBoard[colIdx][rowIdx] = currentShip;
-    console.log(playerBoard[colIdx][rowIdx]);
-    currentShip.spaces--;
+    currentShip.coordinates.push([colIdx, rowIdx]);
+    currentShip.spacesLeft--;
+    if (currentShip.spacesLeft === 0) {
+      // updated display message
+      shipListMsg.innerText =
+        "You have used up all available spaces. Please select complete to confirm!";
+    }
     render();
   }
+}
+
+function handleReset() {
+  playerBoard.forEach((colArr, colIdx) => {
+    colArr.forEach((rowVal, rowIdx) => {
+      if (playerBoard[colIdx][rowIdx] === currentShip) {
+        playerBoard[colIdx][rowIdx] = 0;
+      }
+    });
+  });
+  addShip = false;
+  currentShip.spacesLeft = currentShip.spacesTotal;
+  currentShip.coordinates = [];
+  render();
+}
+
+function handleComplete(shipSection) {
+  const [colIdx, rowIdx] = currentShip.coordinates.at(-1); // starting at final coordinate
+  const valid = selectionValidity(colIdx, rowIdx);
+  if (valid) {
+    shipSection.childNodes.forEach(child => {
+      if (child.tagName === "BUTTON") {
+        child.style.visibility = "hidden";
+      }
+    });
+    shipListMsg.innerText = "Complete! Continue to Next Ship!";
+    addShip = false;
+    currentShip = null;
+  } else {
+    shipListMsg.innerText =
+      "Invalid Ship Placement, Please Reset and Add Ship again";
+  }
+}
+
+function selectionValidity(colIdx, rowIdx) {
+  // confirm if current ship selection is valid - the indexes passed in are for the final block
+  // four directions - up, down, left, right
+  console.log(checkVertical(colIdx, rowIdx));
+  console.log(checkHorizontal(colIdx, rowIdx));
+  return (
+    checkVertical(colIdx, rowIdx) === currentShip.spacesTotal ||
+    checkHorizontal(colIdx, rowIdx) === currentShip.spacesTotal
+  );
+}
+
+function checkVertical(colIdx, rowIdx) {
+  const countAdjacentUp = countAdjacent(colIdx, rowIdx, 0, 1);
+  const countAdjacentDown = countAdjacent(colIdx, rowIdx, 0, -1);
+  return countAdjacentUp === currentShip.spacesTotal
+    ? countAdjacentUp
+    : countAdjacentDown;
+}
+
+function checkHorizontal(colIdx, rowIdx) {
+  const countAdjacentLeft = countAdjacent(colIdx, rowIdx, 1, 0);
+  const countAdjacentRight = countAdjacent(colIdx, rowIdx, -1, 0);
+  return countAdjacentLeft === currentShip.spacesTotal
+    ? countAdjacentLeft
+    : countAdjacentRight;
+}
+
+// All the row nums are the same or all the col nums are. You can use that to check validity
+function countAdjacent(colIdx, rowIdx, colOffset, rowOffset) {
+  let count = 1; // starting at a known coordinate
+  console.log(`Col: ${colIdx} Row: ${rowIdx}`);
+
+  // initialize coordinates
+  colIdx += colOffset;
+  rowIdx += rowOffset;
+
+  // increment count
+  while (
+    playerBoard[colIdx] !== undefined &&
+    playerBoard[colIdx][rowIdx] !== undefined &&
+    playerBoard[colIdx][rowIdx] === currentShip
+  ) {
+    count++;
+    colIdx += colOffset;
+    console.log(`Col: ${colIdx} Row: ${rowIdx}`);
+    rowIdx += rowOffset;
+  }
+  console.log(`Ship Coordinates: ${currentShip.coordinates}`);
+
+  return count;
 }
 
 function init() {
@@ -187,9 +289,14 @@ function init() {
   playerBoard = Array.from(new Array(10), () => new Array(10).fill(0)); // 0 or Player Ships
 
   addShip = false;
-  resetShip = false;
-  completedShip = false;
+  currentShip = null;
   setupComplete = false;
+
+  shipListEls.childNodes.forEach(child => {
+    if (child.tagName === "BUTTON") {
+      child.style.visibility = "visible";
+    }
+  });
 }
 
 function render() {
