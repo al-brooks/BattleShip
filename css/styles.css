@@ -1,3 +1,5 @@
+/* Create Flex Classes */
+
 * {
   box-sizing: border-box;
 }
@@ -27,15 +29,8 @@ h3 {
   margin: 2vmin 0 -2vmin 0;
 }
 
-button {
-  margin: 0 0 5vmin 0;
-  padding: 1vmin 3vmin;
-  font-size: 2vmin;
-  border-radius: 1vmin;
-}
-
-button:hover {
-  cursor: pointer;
+h4 {
+  width: 25vmin;
 }
 
 .display {
@@ -77,6 +72,19 @@ button:hover {
   border: 0.1vmin solid gray;
 }
 
+#player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.colors {
+  margin-right: 3vmin;
+  height: 1vmin;
+  width: 1vmin;
+  border: 1vmin solid black;
+}
+
 #div-line {
   border: 0.25vmin solid black;
   margin: 3vmin 0;
@@ -85,22 +93,30 @@ button:hover {
 
 #ship-list {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
+  flex-direction: column;
+  /* justify-content: center; */
+  /* align-items: space-evenly; */
 }
 
 #ship-list > section {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-evenly;
+  align-items: center;
+  height: 5vmin;
 }
 
-#colors {
-  margin-left: 2vmin;
+#ship-list > section > button {
+  margin: 0 1vmin;
 }
 
-#colors > div {
-  height: 1vmin;
-  width: 1vmin;
-  border: 1vmin solid black;
+#playAgain {
+  margin: 0 0 5vmin 0;
+  padding: 1vmin 3vmin;
+  font-size: 2vmin;
+  border-radius: 1vmin;
+}
+
+#playAgain:hover {
+  cursor: pointer;
 }
