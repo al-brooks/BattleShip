@@ -70,56 +70,45 @@ const player = {
 
 const computer = {
   carrier: {
+    color: "black", // color only needed for development
     hp: 5,
     spacesTotal: 5,
     spacesLeft: 5,
     coordinates: []
   },
   battleship: {
+    color: "gray",
+
     hp: 4,
     spacesTotal: 4,
     spacesLeft: 4,
     coordinates: []
   },
   cruiser: {
+    color: "navy",
+
     hp: 3,
     spacesTotal: 3,
     spacesLeft: 3,
     coordinates: []
   },
   submarine: {
+    color: "darkred",
+
     hp: 3,
     spacesTotal: 3,
     spacesLeft: 3,
     coordinates: []
   },
   destroyer: {
+    color: "darkgoldenrod",
+
     hp: 2,
     spacesTotal: 2,
     spacesLeft: 2,
     coordinates: []
   }
 };
-
-/*
-Player:
-    1. Player chooses where to place their ships on the board
-        a. Player clicks on an 'add' btn that's next to the ship they want to add
-            i. JS knows that the player is adding a ship (toggle)
-        b. Player is prompted to click on grid squares they want their ship on
-            1. Program checks that the space is unoccupied.
-            2. Click updates the coordinates of ship
-            3. Decreases the number of available spaces on ship
-            4. playerBoard array idx [i][j] is updated from 0 to ship object
-        c. Once ship available spaces reaches 0
-            1. Player cannot click on any other squares.
-            2. Player is prompted to click complete or reset (if they don't like arrangement)
-        d. Once Player submits choice
-            1. Program verifies that the coordinates for the ship are in sequential order.
-            2. Are they in a straight line vertically or horizontally.
-            3. If placement is invalid, Player must redo selection.
-            4. playerBoard at ship's coordinates are reset to 0
-*/
 
 /*----- state variables -----*/
 // boolean toggles for Player Ship Placement
@@ -159,10 +148,10 @@ function handleShipSelection(evt) {
   const selectBtn = evt.target;
   const shipSection = selectBtn.parentNode;
   if (selectBtn.classList.contains("add")) {
+    // user can now click on board to select grids;
     console.log("Add Ship!");
     addShip = true;
     currentShip = player[shipSection.id];
-    // user clicks on board to select grids;
   } else if (selectBtn.classList.contains("reset")) {
     handleReset();
     console.log("Reset!!");
@@ -216,25 +205,35 @@ function handleComplete(shipSection) {
   const [colIdx, rowIdx] = currentShip.coordinates.at(-1); // starting at final coordinate
   const valid = selectionValidity(colIdx, rowIdx);
   if (valid) {
-    shipSection.childNodes.forEach(child => {
-      if (child.tagName === "BUTTON") {
-        child.style.visibility = "hidden";
-      }
-    });
+    // hide all buttons
+    hideSelectBtns(shipSection);
     shipListMsg.innerText = "Complete! Continue to Next Ship!";
     addShip = false;
     currentShip = null;
+    // check if all ships are set
+    setupComplete = playerReady();
   } else {
     shipListMsg.innerText =
       "Invalid Ship Placement, Please Reset and Add Ship again";
   }
 }
 
+function hideSelectBtns(shipSection) {
+  shipSection.childNodes.forEach(child => {
+    if (child.tagName === "BUTTON") {
+      child.style.visibility = "hidden";
+    }
+  });
+}
+
+function playerReady() {
+  for (const ship in player) {
+    if (ship.spacesLeft > 0) return false;
+  }
+  return true;
+}
+
 function selectionValidity(colIdx, rowIdx) {
-  // confirm if current ship selection is valid - the indexes passed in are for the final block
-  // four directions - up, down, left, right
-  console.log(checkVertical(colIdx, rowIdx));
-  console.log(checkHorizontal(colIdx, rowIdx));
   return (
     checkVertical(colIdx, rowIdx) === currentShip.spacesTotal ||
     checkHorizontal(colIdx, rowIdx) === currentShip.spacesTotal
@@ -282,11 +281,15 @@ function countAdjacent(colIdx, rowIdx, colOffset, rowOffset) {
   return count;
 }
 
+// Computer board should be generated in init()
 function init() {
   turn = 1;
   winner = null; // (1 or -1) no ties
   computerBoard = Array.from(new Array(10), () => new Array(10).fill(0)); // 0 or Computer Ships
   playerBoard = Array.from(new Array(10), () => new Array(10).fill(0)); // 0 or Player Ships
+
+  // set Computer ships
+  generateComputerBoard();
 
   addShip = false;
   currentShip = null;
@@ -297,6 +300,97 @@ function init() {
       child.style.visibility = "visible";
     }
   });
+
+  render();
+}
+
+/*
+Computer
+     1. Computer's ships are randomly selected.
+    2. They need to be within the board bounds, and no conflicting with other ships
+    3. If you pick a point, you can check to see availability to the left, right
+       top and bottom, going for the amount of available spaces.
+    4. The first available combination is chosen.
+*/
+
+function generateComputerBoard() {
+  // for each ship randomly pick a col idx  + row idx
+  for (const ship in computer) {
+    placeShip(ship);
+  }
+}
+
+function generateCoordinate() {
+  const colIdx = Math.floor(Math.random() * 10);
+  const rowIdx = Math.floor(Math.random() * 10);
+  return [colIdx, rowIdx];
+}
+
+function placeShip(ship) {
+  let [colIdx, rowIdx] = generateCoordinate();
+  // need to ensure that coordinate isn't taken
+  while (computer[computerBoard[colIdx][rowIdx]]) {
+    colIdx = generateCoordinate();
+    rowIdx = generateCoordinate();
+  }
+  // attempt to place new coordinates up, down, left and right until you successfully place a ship
+  // if unable to set ship you need to rerun the function with new coordinates
+  computerBoard[colIdx][rowIdx] = computer[ship];
+  console.dir(computerBoard[colIdx][rowIdx]);
+  computer[ship].coordinates.push([colIdx, rowIdx]);
+  computer[ship].spacesLeft--;
+  buildShipUp(ship, colIdx, rowIdx) ||
+    buildShipDown(ship, colIdx, rowIdx) ||
+    buildShipLeft(ship, colIdx, rowIdx) ||
+    buildShipRight(ship, colIdx, rowIdx);
+}
+
+function buildShipUp(ship, colIdx, rowIdx) {
+  return buildAdjacent(ship, colIdx, rowIdx, 0, 1);
+}
+
+function buildShipDown(ship, colIdx, rowIdx) {
+  return buildAdjacent(ship, colIdx, rowIdx, 0, -1);
+}
+
+function buildShipLeft(ship, colIdx, rowIdx) {
+  return buildAdjacent(ship, colIdx, rowIdx, -1, 0);
+}
+
+function buildShipRight(ship, colIdx, rowIdx) {
+  return buildAdjacent(ship, colIdx, rowIdx, 1, 0);
+}
+
+function buildAdjacent(ship, colIdx, rowIdx, colOffset, rowOffset) {
+  colIdx += colOffset;
+  rowIdx += rowOffset;
+  while (
+    computerBoard[colIdx] !== undefined &&
+    computerBoard[colIdx][rowIdx] !== undefined &&
+    computerBoard[colIdx][rowIdx] === 0 &&
+    computer[ship].spacesLeft > 0
+  ) {
+    console.log(`${ship} added!`);
+    computerBoard[colIdx][rowIdx] = computer[ship];
+    computer[ship].coordinates.push([colIdx, rowIdx]);
+    computer[ship].spacesLeft--;
+    colIdx += colOffset;
+    rowIdx += rowOffset;
+  }
+
+  // we werent able to complete ship
+  if (computer[ship].spacesLeft > 0) {
+    for (const coordinates of computer[ship].coordinates) {
+      let [col, row] = coordinates;
+      computerBoard[col][row] = 0;
+    }
+    computer[ship].coordinates = [];
+    computer[ship].spacesLeft = ship.spacesTotal;
+
+    return false;
+  } else {
+    return true;
+  }
 }
 
 function render() {
@@ -306,7 +400,14 @@ function render() {
 }
 
 function renderBoard(board) {
-  let user = board === computerBoard ? "computer" : "player";
+  if (board === computerBoard) {
+    colorBoard(computer, "computer", computerBoard);
+  } else {
+    colorBoard(player, "player", playerBoard);
+  }
+}
+
+function colorBoard(userObj, user, board) {
   board.forEach((colArr, colIdx) => {
     colArr.forEach((rowVal, rowIdx) => {
       const boardVal = board[colIdx][rowIdx];
@@ -315,6 +416,7 @@ function renderBoard(board) {
       if (boardVal === 0) {
         cellEl.style.backgroundColor = "white";
       } else {
+        // showing computer colors for development - this should just be for player moving into production
         cellEl.style.backgroundColor = boardVal.color;
       }
     });
