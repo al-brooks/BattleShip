@@ -74,7 +74,8 @@ const computer = {
     hp: 5,
     spacesTotal: 5,
     spacesLeft: 5,
-    coordinates: []
+    coordinates: [],
+    built: false
   },
   battleship: {
     color: "gray",
@@ -82,7 +83,8 @@ const computer = {
     hp: 4,
     spacesTotal: 4,
     spacesLeft: 4,
-    coordinates: []
+    coordinates: [],
+    built: false
   },
   cruiser: {
     color: "navy",
@@ -90,7 +92,8 @@ const computer = {
     hp: 3,
     spacesTotal: 3,
     spacesLeft: 3,
-    coordinates: []
+    coordinates: [],
+    built: false
   },
   submarine: {
     color: "darkred",
@@ -98,7 +101,8 @@ const computer = {
     hp: 3,
     spacesTotal: 3,
     spacesLeft: 3,
-    coordinates: []
+    coordinates: [],
+    built: false
   },
   destroyer: {
     color: "darkgoldenrod",
@@ -106,7 +110,8 @@ const computer = {
     hp: 2,
     spacesTotal: 2,
     spacesLeft: 2,
-    coordinates: []
+    coordinates: [],
+    built: false
   }
 };
 
@@ -339,10 +344,30 @@ function placeShip(ship) {
   console.dir(computerBoard[colIdx][rowIdx]);
   computer[ship].coordinates.push([colIdx, rowIdx]);
   computer[ship].spacesLeft--;
-  buildShipUp(ship, colIdx, rowIdx) ||
-    buildShipDown(ship, colIdx, rowIdx) ||
-    buildShipLeft(ship, colIdx, rowIdx) ||
-    buildShipRight(ship, colIdx, rowIdx);
+
+  let builds = [buildShipUp, buildShipLeft, buildShipDown, buildShipRight];
+  let shuffledBuilds = shuffleBuilds(builds);
+
+  for (const build of shuffledBuilds) {
+    let success = build(ship, colIdx, rowIdx);
+    if (success) {
+      computer[ship].built = true;
+      break;
+    }
+  }
+
+  if (computer[ship].built === false) {
+    placeShip(ship);
+  }
+}
+
+function shuffleBuilds(buildArr) {
+  for (let i = buildArr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [buildArr[i], buildArr[j]] = [buildArr[j], buildArr[i]];
+  }
+
+  return buildArr;
 }
 
 function buildShipUp(ship, colIdx, rowIdx) {
