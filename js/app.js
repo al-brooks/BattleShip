@@ -144,20 +144,33 @@ function computerTurn() {
   }
   const squareId = `player-c${colIdx}r${rowIdx}`;
   const square = document.getElementById(squareId);
-  markBoard(playerBoard, square, totalPlayerShips, colIdx, rowIdx);
+  totalPlayerShips = markBoard(
+    playerBoard,
+    square,
+    totalPlayerShips,
+    colIdx,
+    rowIdx
+  );
   determineWinner("computer", player);
+  render();
 }
 
 function playerTurn(evt) {
   const square = evt.target;
   const colIdx = Number(square.id.at(-3));
   const rowIdx = Number(square.id.at(-1));
-  markBoard(computerBoard, square, totalComputerShips, colIdx, rowIdx);
+  totalComputerShips = markBoard(
+    computerBoard,
+    square,
+    totalComputerShips,
+    colIdx,
+    rowIdx
+  );
   determineWinner("player", computer);
+  render();
 }
 
 function markBoard(board, square, userShipTotal, colIdx, rowIdx) {
-  console.log(totalComputerShips);
   if (board[colIdx][rowIdx] === -1) return;
   if (board[colIdx][rowIdx] === null) {
     square.innerText = "O";
@@ -169,9 +182,9 @@ function markBoard(board, square, userShipTotal, colIdx, rowIdx) {
     if (ship.hp === 0) {
       userShipTotal--;
     }
-    render();
   }
   board[colIdx][rowIdx] = -1; // square received a click, now its unplayable
+  return userShipTotal;
 }
 
 function determineWinner(user, opponentObj) {
@@ -324,6 +337,8 @@ function init() {
   addShip = false;
   currentShip = null;
   setupComplete = false;
+  totalPlayerShips = 0; // incremented when player adds ships to board
+  totalComputerShips = 5;
 
   // set game message - usually render message
   gameMsg.innerHTML = `Welcome PLAYER - Please Set Up Your Board Below`;
@@ -332,11 +347,9 @@ function init() {
   for (const ship in computer) {
     resetComputerShips(ship);
   }
+
   // set Computer ships
   generateComputerBoard();
-
-  totalPlayerShips = 0; // incremented when player adds ships to board
-  totalComputerShips = 5;
 
   // set playerLegendColors
   document.querySelectorAll(".colors").forEach(color => {
@@ -447,7 +460,7 @@ function buildAdjacent(ship, colIdx, rowIdx, colOffset, rowOffset) {
 }
 
 function render() {
-  // render computer and player boards
+  // todo: render computer board as an optional button later on
   renderBoard(computerBoard);
   renderBoard(playerBoard);
   renderShipTotals();
@@ -470,7 +483,6 @@ function colorBoard(userObj, user, board) {
       if (boardVal === null) {
         cellEl.style.backgroundColor = "white";
       } else {
-        // todo: showing computer colors for development - this should just be for player moving into production
         cellEl.style.backgroundColor = boardVal.color;
       }
     });
