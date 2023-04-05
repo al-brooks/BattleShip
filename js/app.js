@@ -7,6 +7,7 @@ const users = {
 
 const player = {
   carrier: {
+    name: "carrier",
     color: "black",
     hp: 5,
     spacesTotal: 5,
@@ -14,6 +15,7 @@ const player = {
     coordinates: []
   },
   battleship: {
+    name: "battleship",
     color: "gray",
     hp: 4,
     spacesTotal: 4,
@@ -21,6 +23,7 @@ const player = {
     coordinates: []
   },
   cruiser: {
+    name: "cruiser",
     color: "navy",
     hp: 3,
     spacesTotal: 3,
@@ -28,6 +31,7 @@ const player = {
     coordinates: []
   },
   submarine: {
+    name: "submarine",
     color: "darkred",
     hp: 3,
     spacesTotal: 3,
@@ -35,6 +39,7 @@ const player = {
     coordinates: []
   },
   destroyer: {
+    name: "destroyer",
     color: "darkgoldenrod",
     hp: 2,
     spacesTotal: 2,
@@ -45,6 +50,7 @@ const player = {
 
 const computer = {
   carrier: {
+    name: "carrier",
     color: "black", // color only needed for development
     hp: 5,
     spacesTotal: 5,
@@ -53,8 +59,8 @@ const computer = {
     built: false
   },
   battleship: {
+    name: "battleship",
     color: "gray",
-
     hp: 4,
     spacesTotal: 4,
     spacesLeft: 4,
@@ -62,8 +68,8 @@ const computer = {
     built: false
   },
   cruiser: {
+    name: "cruiser",
     color: "navy",
-
     hp: 3,
     spacesTotal: 3,
     spacesLeft: 3,
@@ -71,8 +77,8 @@ const computer = {
     built: false
   },
   submarine: {
+    name: "submarine",
     color: "darkred",
-
     hp: 3,
     spacesTotal: 3,
     spacesLeft: 3,
@@ -126,9 +132,9 @@ function handleComputerBoardClick(evt) {
       "PLAYER - Finish Setting Up Your Board Before Gameplay Commences.";
     return;
   }
+
   // Player Turn
   playerTurn(evt);
-
   // Computer Responds
   computerTurn();
 }
@@ -137,9 +143,24 @@ function computerTurn() {
   let [colIdx, rowIdx] = generateCoordinate();
   // if cpu picks a coordinate it already visited, reroll
   while (playerBoard[colIdx][rowIdx] === -1) {
-    let [colIdx, rowIdx] = generateCoordinate();
+    [colIdx, rowIdx] = generateCoordinate();
   }
-  setTimeout(markBoard(playerBoard, colIdx, rowIdx), 3000);
+  const squareId = `player-c${colIdx}r${rowIdx}`;
+  const square = document.getElementById(squareId);
+  if (playerBoard[colIdx][rowIdx] === -1) return;
+  if (playerBoard[colIdx][rowIdx] === null) {
+    square.innerText = "O";
+  } else {
+    square.innerText = "X";
+    let ship = playerBoard[colIdx][rowIdx];
+    console.log(ship);
+    ship.hp--;
+    // this conditional works
+    if (ship.hp === 0) console.log("Your ship has been sunk!");
+  }
+
+  playerBoard[colIdx][rowIdx] = -1; // square received a click, now its unplayable
+  turn = 1; // todo:  don't think i need turn variable
 }
 
 function playerTurn(evt) {
@@ -147,28 +168,40 @@ function playerTurn(evt) {
   const colIdx = Number(square.id.at(-3));
   const rowIdx = Number(square.id.at(-1));
   if (computerBoard[colIdx][rowIdx] === -1) return;
-  markBoard(computerBoard, colIdx, rowIdx);
-  turn *= 1;
-}
-
-function markBoard(board, colIdx, rowIdx) {
-  const user = board === computerBoard ? "computer" : "player";
-  const squareId = `${user}-c${colIdx}r${rowIdx}`;
-  const square = document.getElementById(squareId);
-  board === playerBoard
-    ? console.log("Computer Turn!")
-    : console.log("Player Turn!");
-  if (board[colIdx][rowIdx] === null) {
+  if (computerBoard[colIdx][rowIdx] === null) {
     square.innerText = "O";
   } else {
     square.innerText = "X";
-    let ship = board[colIdx][rowIdx];
+    let ship = computerBoard[colIdx][rowIdx];
+    console.log(ship);
     ship.hp--;
-    // if ship hp is 0, then the ship is sunk!
+    if (ship.hp === 0) console.log("Your ship has been sunk!");
   }
-  board[colIdx][rowIdx] = -1; // square received a click, now its unplayable
-  turn *= 1;
+
+  computerBoard[colIdx][rowIdx] = -1; // square received a click, now its unplayable
+  turn = -1; // todo:  don't think i need turn variable
 }
+
+// function markBoard(board, colIdx, rowIdx) {
+//   const user = board === computerBoard ? "computer" : "player";
+//   const squareId = `${user}-c${colIdx}r${rowIdx}`;
+//   const square = document.getElementById(squareId);
+//   if (board[colIdx][rowIdx] === null) {
+//     square.innerText = "O";
+//   } else {
+//     square.innerText = "X";
+//     let ship = board[colIdx][rowIdx];
+//     console.log(ship);
+//     ship.hp--;
+//     // if ship hp is 0, then the ship is sunk!
+//     // if (ship.hp === 0) {
+//     //   console.log(`Ship: ${ship} is sunk!`);
+//     // }
+//   }
+
+//   board[colIdx][rowIdx] = -1; // square received a click, now its unplayable
+//   turn *= 1;
+// }
 
 function handleShipSelection(evt) {
   const selectBtn = evt.target;
