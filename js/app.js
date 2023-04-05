@@ -146,6 +146,7 @@ const playerBoardEl = document.querySelector("#player > .display > .board");
 /*----- event listeners -----*/
 shipListEls.addEventListener("click", handleShipSelection);
 playerBoardEl.addEventListener("click", handleBoardClick);
+playAgainBtn.addEventListener("click", init);
 
 /*----- functions -----*/
 
@@ -293,6 +294,10 @@ function init() {
   computerBoard = Array.from(new Array(10), () => new Array(10).fill(null)); // 0 or Computer Ships
   playerBoard = Array.from(new Array(10), () => new Array(10).fill(null)); // 0 or Player Ships
 
+  // reset Computer Ships
+  for (const ship in computer) {
+    resetComputerShips(ship);
+  }
   // set Computer ships
   generateComputerBoard();
 
@@ -407,16 +412,20 @@ function buildAdjacent(ship, colIdx, rowIdx, colOffset, rowOffset) {
   //   console.log(`Ship: ${ship}\nSpaces Left: ${computer[ship].spacesLeft}`);
 
   if (computer[ship].spacesLeft > 0) {
-    for (const coordinates of computer[ship].coordinates) {
-      let [col, row] = coordinates;
-      computerBoard[col][row] = null;
-    }
-    computer[ship].coordinates = [];
-    computer[ship].spacesLeft = computer[ship].spacesTotal;
+    resetComputerShips(ship);
     return false;
   } else {
     return true;
   }
+}
+
+function resetComputerShips(ship) {
+  for (const coordinates of computer[ship].coordinates) {
+    let [col, row] = coordinates;
+    computerBoard[col][row] = null;
+  }
+  computer[ship].coordinates = [];
+  computer[ship].spacesLeft = computer[ship].spacesTotal;
 }
 
 function render() {
