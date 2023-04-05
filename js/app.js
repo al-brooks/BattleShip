@@ -92,7 +92,6 @@ const computer = {
 };
 
 /*----- state variables -----*/
-// boolean toggles for Player Ship Placement
 let addShip;
 let setupComplete;
 let currentShip;
@@ -100,11 +99,8 @@ let currentShip;
 let totalPlayerShips;
 let totalComputerShips;
 
-// let turn;
 let winner;
 
-// (10 X 10) 2d array
-// values are 0 (empty), 1 (a ship is there), -1 (no ship is there)
 let playerBoard;
 let computerBoard;
 
@@ -114,13 +110,15 @@ const playerShipTotalMsg = document.querySelector("#player > .ship-total");
 const gameMsg = document.getElementById("game-msg");
 const shipListEls = document.getElementById("ship-list");
 const shipListMsg = document.getElementById("shipMsg");
-const playAgainBtn = document.getElementById("play-again");
+
+// todo: figure out how to refactor player and computer sections
 const computerBoardEl = document.querySelector("#computer > .display > .board");
 const playerBoardEl = document.querySelector("#player > .display > .board");
+const playAgainBtn = document.getElementById("play-again");
 
 /*----- event listeners -----*/
 shipListEls.addEventListener("click", handleShipSelection);
-playerBoardEl.addEventListener("click", handlePlayerBoardClick);
+playerBoardEl.addEventListener("click", handleSelectionClick);
 computerBoardEl.addEventListener("click", handleComputerBoardClick);
 playAgainBtn.addEventListener("click", init);
 
@@ -143,26 +141,13 @@ function handleComputerBoardClick(evt) {
 
 function computerTurn() {
   let [colIdx, rowIdx] = generateCoordinate();
-  // if cpu picks a coordinate it already visited, reroll
   while (playerBoard[colIdx][rowIdx] === -1) {
     [colIdx, rowIdx] = generateCoordinate();
   }
   const squareId = `player-c${colIdx}r${rowIdx}`;
   const square = document.getElementById(squareId);
-  if (playerBoard[colIdx][rowIdx] === -1) return;
-  if (playerBoard[colIdx][rowIdx] === null) {
-    square.innerText = "O";
-  } else {
-    square.innerText = "X";
-    let ship = playerBoard[colIdx][rowIdx];
-    console.log(ship);
-    ship.hp--;
-    totalPlayerShips--;
-    // this conditional works
-    if (ship.hp === 0) console.log("Your ship has been sunk!");
-  }
+  markBoard(playerBoard, square, totalPlayerShips, colIdx, rowIdx);
 
-  playerBoard[colIdx][rowIdx] = -1; // square received a click, now its unplayable
   determineWinner("computer", player);
 }
 
@@ -170,43 +155,40 @@ function playerTurn(evt) {
   const square = evt.target;
   const colIdx = Number(square.id.at(-3));
   const rowIdx = Number(square.id.at(-1));
-  if (computerBoard[colIdx][rowIdx] === -1) return;
-  if (computerBoard[colIdx][rowIdx] === null) {
-    square.innerText = "O";
-  } else {
-    square.innerText = "X";
-    let ship = computerBoard[colIdx][rowIdx];
-    ship.hp--;
-    totalComputerShips--;
-    if (ship.hp === 0) console.log("Your ship has been sunk!");
-  }
+  markBoard(computerBoard, square, totalComputerShips, colIdx, rowIdx);
 
-  computerBoard[colIdx][rowIdx] = -1; // square received a click, now its unplayable
-
-  // determine if there is a winner
   determineWinner("player", computer);
 }
 
+function markBoard(board, square, userShipTotal, colIdx, rowIdx) {
+  if (board[colIdx][rowIdx] === -1) return;
+  if (board[colIdx][rowIdx] === null) {
+    square.innerText = "O";
+  } else {
+    square.innerText = "X";
+    let ship = board[colIdx][rowIdx];
+    ship.hp--;
+    userShipTotal--;
+    if (ship.hp === 0) console.log("Your ship has been sunk!");
+    render();
+  }
+
+  board[colIdx][rowIdx] = -1; // square received a click, now its unplayable
+}
+
 function determineWinner(user, opponentObj) {
-  console.log(`${user} who wins`);
   for (const ship in opponentObj) {
-    console.log(opponentObj[ship]);
     if (opponentObj[ship].hp > 0) return;
   }
   winner = user;
   gameMsg.innerHTML = `${winner.toUpperCase()} has won the game!`;
 }
 
-function markBoard(board, colIdx, rowIdx) {
-  // single function for both player and computer marking board
-}
-
+// todo: Saw potential bug when selecting squares out of order
 function handleShipSelection(evt) {
   const selectBtn = evt.target;
   const shipSection = selectBtn.parentNode;
   if (selectBtn.classList.contains("add")) {
-    // user can now click on board to select grids;
-    console.log("Add Ship!");
     addShip = true;
     currentShip = player[shipSection.id];
   } else if (selectBtn.classList.contains("reset")) {
@@ -217,12 +199,11 @@ function handleShipSelection(evt) {
   }
 }
 
-function handlePlayerBoardClick(evt) {
-  const square = evt.target;
-  const colIdx = Number(square.id.at(-3));
-  const rowIdx = Number(square.id.at(-1));
+function handleSelectionClick(evt) {
   if (addShip) {
-    console.log(addShip);
+    const square = evt.target;
+    const colIdx = Number(square.id.at(-3));
+    const rowIdx = Number(square.id.at(-1));
     handleAdd(square, colIdx, rowIdx);
   } else {
     return;
