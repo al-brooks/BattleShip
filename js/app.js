@@ -1,33 +1,3 @@
-/*----- Setting up Game -----*/
-/*
-Player:
-    1. Player chooses where to place their ships on the board
-        a. Player clicks on an 'add' btn that's next to the ship they want to add
-            i. JS knows that the player is adding a ship (toggle)
-        b. Player is prompted to click on grid squares they want their ship on
-            1. Program checks that the space is unoccupied.
-            2. Click updates the coordinates of ship
-            3. Decreases the number of available spaces on ship
-            4. playerBoard array idx [i][j] is updated from 0 to ship object
-        c. Once ship available spaces reaches 0
-            1. Player cannot click on any other squares.
-            2. Player is prompted to click complete or reset (if they don't like arrangement)
-        d. Once Player submits choice
-            1. Program verifies that the coordinates for the ship are in sequential order.
-            2. Are they in a straight line vertically or horizontally.
-            3. If placement is invalid, Player must redo selection.
-            4. playerBoard at ship's coordinates are reset to 0
-    2. Ships have a specific set of hp which is decremented whenever hit.
-
-
-Computer:
-    1. Computer's ships are randomly selected.
-    2. They need to be within the board bounds, and no conflicting with other ships
-    3. If you pick a point, you can check to see availability to the left, right
-       top and bottom, going for the amount of available spaces.
-    4. The first available combination is chosen.
-*/
-
 /*----- constants -----*/
 
 const player = {
@@ -262,16 +232,12 @@ function checkHorizontal(colIdx, rowIdx) {
     : countAdjacentRight;
 }
 
-// All the row nums are the same or all the col nums are. You can use that to check validity
 function countAdjacent(colIdx, rowIdx, colOffset, rowOffset) {
   let count = 1; // starting at a known coordinate
-  //   console.log(`Col: ${colIdx} Row: ${rowIdx}`);
 
-  // initialize coordinates
   colIdx += colOffset;
   rowIdx += rowOffset;
 
-  // increment count
   while (
     playerBoard[colIdx] !== undefined &&
     playerBoard[colIdx][rowIdx] !== undefined &&
@@ -279,15 +245,12 @@ function countAdjacent(colIdx, rowIdx, colOffset, rowOffset) {
   ) {
     count++;
     colIdx += colOffset;
-    // console.log(`Col: ${colIdx} Row: ${rowIdx}`);
     rowIdx += rowOffset;
   }
-  //   console.log(`Ship Coordinates: ${currentShip.coordinates}`);
 
   return count;
 }
 
-// Computer board should be generated in init()
 function init() {
   turn = 1;
   winner = null; // (1 or -1) no ties
@@ -320,18 +283,7 @@ function init() {
   render();
 }
 
-/*
-Computer
-     1. Computer's ships are randomly selected.
-    2. They need to be within the board bounds, and no conflicting with other ships
-    3. If you pick a point, you can check to see availability to the left, right
-       top and bottom, going for the amount of available spaces.
-    4. The first available combination is chosen.
-*/
-
-// todo:  There are still cases where ships overlap! need to trouble shoot but work on actual gameplay first!
 function generateComputerBoard() {
-  // for each ship randomly pick a col idx  + row idx
   for (const ship in computer) {
     placeShip(ship);
   }
@@ -350,7 +302,7 @@ function placeShip(ship) {
   let builds = [buildShipUp, buildShipLeft, buildShipDown, buildShipRight];
   let shuffledBuilds = shuffleBuilds(builds);
 
-  // refactored below code and reran app 20+ times and cpu render looks good
+  // todo: refactored below code and reran app 20+ times and cpu render looks good - just keep an eye out
   for (const build of shuffledBuilds) {
     let success = build(ship, colIdx, rowIdx);
     if (success) {
@@ -402,14 +354,12 @@ function buildAdjacent(ship, colIdx, rowIdx, colOffset, rowOffset) {
     computerBoard[colIdx][rowIdx] === null &&
     computer[ship].spacesLeft > 0
   ) {
-    // console.log(`Currently on board: ${computerBoard[colIdx][rowIdx]}`);
     computerBoard[colIdx][rowIdx] = computer[ship];
     computer[ship].coordinates.push([colIdx, rowIdx]);
     computer[ship].spacesLeft--;
     colIdx += colOffset;
     rowIdx += rowOffset;
   }
-  //   console.log(`Ship: ${ship}\nSpaces Left: ${computer[ship].spacesLeft}`);
 
   if (computer[ship].spacesLeft > 0) {
     resetComputerShips(ship);
@@ -451,7 +401,7 @@ function colorBoard(userObj, user, board) {
       if (boardVal === null) {
         cellEl.style.backgroundColor = "white";
       } else {
-        // showing computer colors for development - this should just be for player moving into production
+        // todo: showing computer colors for development - this should just be for player moving into production
         cellEl.style.backgroundColor = boardVal.color;
       }
     });
