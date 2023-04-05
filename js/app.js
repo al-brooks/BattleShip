@@ -112,6 +112,9 @@ const playerShipTotalMsg = document.querySelector("#player > .ship-total");
 const gameMsg = document.getElementById("game-msg");
 const shipListEls = document.getElementById("ship-list");
 const selectShipDisplayMsg = document.getElementById("select-msg");
+const selectShipBtns = document.querySelectorAll(
+  "#ship-list > section > button"
+);
 
 // todo: figure out how to refactor player and computer sections
 const computerBoardEl = document.querySelector("#computer > .display > .board");
@@ -228,7 +231,6 @@ function handleAdd(square, colIdx, rowIdx) {
     currentShip.coordinates.push([colIdx, rowIdx]);
     currentShip.spacesLeft--;
     if (currentShip.spacesLeft === 0) {
-      // updated display message
       selectShipDisplayMsg.innerHTML =
         "You have used up all available spaces. Please select complete to confirm!";
     }
@@ -253,7 +255,7 @@ function handleReset() {
 }
 
 function handleComplete(shipSection) {
-  const [colIdx, rowIdx] = currentShip.coordinates.at(-1); // starting at final coordinate
+  const [colIdx, rowIdx] = currentShip.coordinates.at(-1);
   const valid = selectionValidity(colIdx, rowIdx);
   if (valid) {
     // hide all buttons
@@ -263,7 +265,6 @@ function handleComplete(shipSection) {
     currentShip = null;
     totalPlayerShips++;
     render();
-    // check if all ships are set
     setupComplete = playerReady();
   } else {
     selectShipDisplayMsg.innerHTML =
@@ -343,11 +344,14 @@ function init() {
   // set game message - usually render message
   gameMsg.innerHTML = `Welcome PLAYER - Please Set Up Your Board Below`;
 
-  // reset Computer Ships
+  // reset Ships
   for (const ship in computer) {
-    resetComputerShips(ship);
+    resetShips(computerBoard, computer, ship);
   }
 
+  for (const ship in player) {
+    resetShips(playerBoard, player, ship);
+  }
   // set Computer ships
   generateComputerBoard();
 
@@ -357,22 +361,21 @@ function init() {
     color.style.backgroundColor = player[ship].color;
   });
 
-  shipListEls.childNodes.forEach(child => {
-    if (child.tagName === "BUTTON") {
-      child.style.visibility = "visible";
-    }
+  selectShipBtns.forEach(btn => {
+    btn.style.visibility = "visible";
   });
 
   render();
 }
 
-function resetComputerShips(ship) {
-  for (const coordinates of computer[ship].coordinates) {
+function resetShips(board, userObj, ship) {
+  for (const coordinates of userObj[ship].coordinates) {
     let [col, row] = coordinates;
-    computerBoard[col][row] = null;
+
+    board[col][row] = null;
   }
-  computer[ship].coordinates = [];
-  computer[ship].spacesLeft = computer[ship].spacesTotal;
+  userObj[ship].coordinates = [];
+  userObj[ship].spacesLeft = userObj[ship].spacesTotal;
 }
 
 function generateComputerBoard() {
@@ -452,7 +455,7 @@ function buildAdjacent(ship, colIdx, rowIdx, colOffset, rowOffset) {
   }
 
   if (computer[ship].spacesLeft > 0) {
-    resetComputerShips(ship);
+    resetShips(computerBoard, computer, ship);
     return false;
   } else {
     return true;
