@@ -126,12 +126,48 @@ function handleComputerBoardClick(evt) {
       "PLAYER - Finish Setting Up Your Board Before Gameplay Commences.";
     return;
   }
+  // Player Turn
+  playerTurn(evt);
+
+  // Computer Responds
+  computerTurn();
+}
+
+function computerTurn() {
+  let [colIdx, rowIdx] = generateCoordinate();
+  // if cpu picks a coordinate it already visited, reroll
+  while (playerBoard[colIdx][rowIdx] === -1) {
+    let [colIdx, rowIdx] = generateCoordinate();
+  }
+  setTimeout(markBoard(playerBoard, colIdx, rowIdx), 3000);
+}
+
+function playerTurn(evt) {
   const square = evt.target;
   const colIdx = Number(square.id.at(-3));
   const rowIdx = Number(square.id.at(-1));
-  if (computerBoard[colIdx][rowIdx] === null) {
+  if (computerBoard[colIdx][rowIdx] === -1) return;
+  markBoard(computerBoard, colIdx, rowIdx);
+  turn *= 1;
+}
+
+function markBoard(board, colIdx, rowIdx) {
+  const user = board === computerBoard ? "computer" : "player";
+  const squareId = `${user}-c${colIdx}r${rowIdx}`;
+  const square = document.getElementById(squareId);
+  board === playerBoard
+    ? console.log("Computer Turn!")
+    : console.log("Player Turn!");
+  if (board[colIdx][rowIdx] === null) {
     square.innerText = "O";
+  } else {
+    square.innerText = "X";
+    let ship = board[colIdx][rowIdx];
+    ship.hp--;
+    // if ship hp is 0, then the ship is sunk!
   }
+  board[colIdx][rowIdx] = -1; // square received a click, now its unplayable
+  turn *= 1;
 }
 
 function handleShipSelection(evt) {
@@ -393,7 +429,7 @@ function colorBoard(userObj, user, board) {
 function init() {
   turn = 1;
   winner = null; // (1 or -1) no ties
-  computerBoard = Array.from(new Array(10), () => new Array(10).fill(null)); // null or Computer Ships
+  computerBoard = Array.from(new Array(10), () => new Array(10).fill(null)); // null, -1 (square already played) or Computer Ship (not hit)
   playerBoard = Array.from(new Array(10), () => new Array(10).fill(null)); // null or Player Ships
 
   // set game message
