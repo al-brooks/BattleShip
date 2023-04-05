@@ -1,10 +1,5 @@
 /*----- constants -----*/
 
-const users = {
-  1: "player",
-  "-1": "computer"
-};
-
 const player = {
   carrier: {
     name: "carrier",
@@ -114,6 +109,8 @@ let playerBoard;
 let computerBoard;
 
 /*----- cached elements  -----*/
+const computerShipTotalMsg = document.querySelector("#computer > .ship-total");
+const playerShipTotalMsg = document.querySelector("#player > .ship-total");
 const gameMsg = document.getElementById("game-msg");
 const shipListEls = document.getElementById("ship-list");
 const shipListMsg = document.getElementById("shipMsg");
@@ -135,6 +132,7 @@ function handleComputerBoardClick(evt) {
       "PLAYER - Finish Setting Up Your Board Before Gameplay Commences.";
     return;
   }
+  if (winner) return;
 
   // Player Turn
   playerTurn(evt);
@@ -159,6 +157,7 @@ function computerTurn() {
     let ship = playerBoard[colIdx][rowIdx];
     console.log(ship);
     ship.hp--;
+    totalPlayerShips--;
     // this conditional works
     if (ship.hp === 0) console.log("Your ship has been sunk!");
   }
@@ -178,6 +177,7 @@ function playerTurn(evt) {
     square.innerText = "X";
     let ship = computerBoard[colIdx][rowIdx];
     ship.hp--;
+    totalComputerShips--;
     if (ship.hp === 0) console.log("Your ship has been sunk!");
   }
 
@@ -194,6 +194,7 @@ function determineWinner(user, opponentObj) {
     if (opponentObj[ship].hp > 0) return;
   }
   winner = user;
+  gameMsg.innerHTML = `${winner.toUpperCase()} has won the game!`;
 }
 
 function markBoard(board, colIdx, rowIdx) {
@@ -266,6 +267,8 @@ function handleComplete(shipSection) {
     shipListMsg.innerText = "Complete! Continue to Next Ship!";
     addShip = false;
     currentShip = null;
+    totalPlayerShips++;
+    render();
     // check if all ships are set
     setupComplete = playerReady();
   } else {
@@ -430,6 +433,7 @@ function render() {
   // render computer and player boards
   renderBoard(computerBoard);
   renderBoard(playerBoard);
+  renderShipTotals();
 }
 
 function renderBoard(board) {
@@ -454,6 +458,11 @@ function colorBoard(userObj, user, board) {
       }
     });
   });
+}
+
+function renderShipTotals() {
+  computerShipTotalMsg.innerHTML = `Ships Ready for Battle: ${totalComputerShips}`;
+  playerShipTotalMsg.innerHTML = `Ships Ready for Battle: ${totalPlayerShips}`;
 }
 
 function init() {
