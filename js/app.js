@@ -109,7 +109,7 @@ const computerShipTotalMsg = document.querySelector("#computer > .ship-total");
 const playerShipTotalMsg = document.querySelector("#player > .ship-total");
 const gameMsg = document.getElementById("game-msg");
 const shipListEls = document.getElementById("ship-list");
-const shipListMsg = document.getElementById("shipMsg");
+const selectShipDisplayMsg = document.getElementById("select-msg");
 
 // todo: figure out how to refactor player and computer sections
 const computerBoardEl = document.querySelector("#computer > .display > .board");
@@ -191,9 +191,9 @@ function handleShipSelection(evt) {
   if (selectBtn.classList.contains("add")) {
     addShip = true;
     currentShip = player[shipSection.id];
+    selectShipDisplayMsg.innerHTML = "Click squares below to configure ship!";
   } else if (selectBtn.classList.contains("reset")) {
     handleReset();
-    console.log("Reset!!");
   } else if (selectBtn.classList.contains("complete")) {
     handleComplete(shipSection);
   }
@@ -218,7 +218,7 @@ function handleAdd(square, colIdx, rowIdx) {
     currentShip.spacesLeft--;
     if (currentShip.spacesLeft === 0) {
       // updated display message
-      shipListMsg.innerText =
+      selectShipDisplayMsg.innerHTML =
         "You have used up all available spaces. Please select complete to confirm!";
     }
     render();
@@ -236,6 +236,8 @@ function handleReset() {
   addShip = false;
   currentShip.spacesLeft = currentShip.spacesTotal;
   currentShip.coordinates = [];
+  selectShipDisplayMsg.innerHTML =
+    "Reset Complete! Please click Add Ship to add your ship!";
   render();
 }
 
@@ -245,7 +247,7 @@ function handleComplete(shipSection) {
   if (valid) {
     // hide all buttons
     hideSelectBtns(shipSection);
-    shipListMsg.innerText = "Complete! Continue to Next Ship!";
+    selectShipDisplayMsg.innerHTML = "Complete! Continue to Next Ship!";
     addShip = false;
     currentShip = null;
     totalPlayerShips++;
@@ -253,7 +255,7 @@ function handleComplete(shipSection) {
     // check if all ships are set
     setupComplete = playerReady();
   } else {
-    shipListMsg.innerText =
+    selectShipDisplayMsg.innerHTML =
       "Invalid Ship Placement, Please Reset and Add Ship again";
   }
 }
@@ -270,6 +272,7 @@ function playerReady() {
   for (const ship in player) {
     if (ship.spacesLeft > 0) return false;
   }
+  selectShipDisplayMsg.innerHTML = "";
   return true;
 }
 
