@@ -173,12 +173,16 @@ function playerTurn(evt) {
   render();
 }
 
+// todo: add styled marks
 function markBoard(board, square, userShipTotal, colIdx, rowIdx) {
+  console.log(board[colIdx][rowIdx]);
   if (board[colIdx][rowIdx] === -1) return;
   if (board[colIdx][rowIdx] === null) {
     square.innerText = "O";
+    square.classList.add("missedMark");
   } else {
     square.innerText = "X";
+    square.classList.add("hitMark");
     let ship = board[colIdx][rowIdx];
     ship.hp--;
 
@@ -198,14 +202,14 @@ function determineWinner(user, opponentObj) {
   gameMsg.innerHTML = `${winner.toUpperCase()} has won the game!`;
 }
 
-// todo: Saw potential bug when selecting squares out of order
 function handleShipSelection(evt) {
   const selectBtn = evt.target;
   const shipSection = selectBtn.parentNode;
   if (selectBtn.classList.contains("add")) {
     addShip = true;
     currentShip = player[shipSection.id];
-    selectShipDisplayMsg.innerHTML = "Click squares below to configure ship!";
+    selectShipDisplayMsg.innerHTML =
+      "Click squares (in order) below to configure ship!";
   } else if (selectBtn.classList.contains("reset")) {
     handleReset();
   } else if (selectBtn.classList.contains("complete")) {
