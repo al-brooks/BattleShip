@@ -102,7 +102,10 @@ let addShip;
 let setupComplete;
 let currentShip;
 
-let turn;
+let totalPlayerShips;
+let totalComputerShips;
+
+// let turn;
 let winner;
 
 // (10 X 10) 2d array
@@ -135,6 +138,7 @@ function handleComputerBoardClick(evt) {
 
   // Player Turn
   playerTurn(evt);
+
   // Computer Responds
   computerTurn();
 }
@@ -160,7 +164,7 @@ function computerTurn() {
   }
 
   playerBoard[colIdx][rowIdx] = -1; // square received a click, now its unplayable
-  turn = 1; // todo:  don't think i need turn variable
+  determineWinner("computer", player);
 }
 
 function playerTurn(evt) {
@@ -173,35 +177,28 @@ function playerTurn(evt) {
   } else {
     square.innerText = "X";
     let ship = computerBoard[colIdx][rowIdx];
-    console.log(ship);
     ship.hp--;
     if (ship.hp === 0) console.log("Your ship has been sunk!");
   }
 
   computerBoard[colIdx][rowIdx] = -1; // square received a click, now its unplayable
-  turn = -1; // todo:  don't think i need turn variable
+
+  // determine if there is a winner
+  determineWinner("player", computer);
 }
 
-// function markBoard(board, colIdx, rowIdx) {
-//   const user = board === computerBoard ? "computer" : "player";
-//   const squareId = `${user}-c${colIdx}r${rowIdx}`;
-//   const square = document.getElementById(squareId);
-//   if (board[colIdx][rowIdx] === null) {
-//     square.innerText = "O";
-//   } else {
-//     square.innerText = "X";
-//     let ship = board[colIdx][rowIdx];
-//     console.log(ship);
-//     ship.hp--;
-//     // if ship hp is 0, then the ship is sunk!
-//     // if (ship.hp === 0) {
-//     //   console.log(`Ship: ${ship} is sunk!`);
-//     // }
-//   }
+function determineWinner(user, opponentObj) {
+  console.log(`${user} who wins`);
+  for (const ship in opponentObj) {
+    console.log(opponentObj[ship]);
+    if (opponentObj[ship].hp > 0) return;
+  }
+  winner = user;
+}
 
-//   board[colIdx][rowIdx] = -1; // square received a click, now its unplayable
-//   turn *= 1;
-// }
+function markBoard(board, colIdx, rowIdx) {
+  // single function for both player and computer marking board
+}
 
 function handleShipSelection(evt) {
   const selectBtn = evt.target;
@@ -460,7 +457,6 @@ function colorBoard(userObj, user, board) {
 }
 
 function init() {
-  turn = 1;
   winner = null; // (1 or -1) no ties
   computerBoard = Array.from(new Array(10), () => new Array(10).fill(null)); // null, -1 (square already played) or Computer Ship (not hit)
   playerBoard = Array.from(new Array(10), () => new Array(10).fill(null)); // null or Player Ships
@@ -474,6 +470,9 @@ function init() {
   }
   // set Computer ships
   generateComputerBoard();
+
+  totalPlayerShips = 0; // incremented when player adds ships to board
+  totalComputerShips = 5;
 
   // set playerLegendColors
   document.querySelectorAll(".colors").forEach(color => {
