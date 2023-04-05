@@ -179,7 +179,7 @@ function handleBoardClick(evt) {
 
 function handleAdd(square, colIdx, rowIdx) {
   if (currentShip.spacesLeft === 0) return;
-  if (playerBoard[colIdx][rowIdx] === 0) {
+  if (playerBoard[colIdx][rowIdx] === null) {
     playerBoard[colIdx][rowIdx] = currentShip;
     currentShip.coordinates.push([colIdx, rowIdx]);
     currentShip.spacesLeft--;
@@ -196,7 +196,7 @@ function handleReset() {
   playerBoard.forEach((colArr, colIdx) => {
     colArr.forEach((rowVal, rowIdx) => {
       if (playerBoard[colIdx][rowIdx] === currentShip) {
-        playerBoard[colIdx][rowIdx] = 0;
+        playerBoard[colIdx][rowIdx] = null;
       }
     });
   });
@@ -290,8 +290,8 @@ function countAdjacent(colIdx, rowIdx, colOffset, rowOffset) {
 function init() {
   turn = 1;
   winner = null; // (1 or -1) no ties
-  computerBoard = Array.from(new Array(10), () => new Array(10).fill(0)); // 0 or Computer Ships
-  playerBoard = Array.from(new Array(10), () => new Array(10).fill(0)); // 0 or Player Ships
+  computerBoard = Array.from(new Array(10), () => new Array(10).fill(null)); // 0 or Computer Ships
+  playerBoard = Array.from(new Array(10), () => new Array(10).fill(null)); // 0 or Player Ships
 
   // set Computer ships
   generateComputerBoard();
@@ -318,6 +318,7 @@ Computer
     4. The first available combination is chosen.
 */
 
+// todo:  There are still cases where ships overlap! need to trouble shoot but work on actual gameplay first!
 function generateComputerBoard() {
   // for each ship randomly pick a col idx  + row idx
   for (const ship in computer) {
@@ -325,40 +326,35 @@ function generateComputerBoard() {
   }
 }
 
-function generateCoordinate() {
-  const colIdx = Math.floor(Math.random() * 10);
-  const rowIdx = Math.floor(Math.random() * 10);
-  return [colIdx, rowIdx];
-}
-
 function placeShip(ship) {
   let [colIdx, rowIdx] = generateCoordinate();
-  // need to ensure that coordinate isn't taken
-  while (computer[computerBoard[colIdx][rowIdx]]) {
-    colIdx = generateCoordinate();
-    rowIdx = generateCoordinate();
+  while (computerBoard[colIdx][rowIdx] !== null) {
+    [colIdx, rowIdx] = generateCoordinate();
   }
-  // attempt to place new coordinates up, down, left and right until you successfully place a ship
-  // if unable to set ship you need to rerun the function with new coordinates
+
   computerBoard[colIdx][rowIdx] = computer[ship];
-  console.dir(computerBoard[colIdx][rowIdx]);
   computer[ship].coordinates.push([colIdx, rowIdx]);
   computer[ship].spacesLeft--;
 
   let builds = [buildShipUp, buildShipLeft, buildShipDown, buildShipRight];
   let shuffledBuilds = shuffleBuilds(builds);
 
+  // refactored below code and reran app 20+ times and cpu render looks good
   for (const build of shuffledBuilds) {
     let success = build(ship, colIdx, rowIdx);
     if (success) {
       computer[ship].built = true;
       break;
+    } else {
+      placeShip(ship);
     }
   }
+}
 
-  if (computer[ship].built === false) {
-    placeShip(ship);
-  }
+function generateCoordinate() {
+  const colIdx = Math.floor(Math.random() * 10);
+  const rowIdx = Math.floor(Math.random() * 10);
+  return [colIdx, rowIdx];
 }
 
 function shuffleBuilds(buildArr) {
@@ -392,23 +388,22 @@ function buildAdjacent(ship, colIdx, rowIdx, colOffset, rowOffset) {
   while (
     computerBoard[colIdx] !== undefined &&
     computerBoard[colIdx][rowIdx] !== undefined &&
-    computerBoard[colIdx][rowIdx] === 0 &&
+    computerBoard[colIdx][rowIdx] === null &&
     computer[ship].spacesLeft > 0
   ) {
-    console.log(`${ship} added!`);
+    // console.log(`Currently on board: ${computerBoard[colIdx][rowIdx]}`);
     computerBoard[colIdx][rowIdx] = computer[ship];
     computer[ship].coordinates.push([colIdx, rowIdx]);
     computer[ship].spacesLeft--;
     colIdx += colOffset;
     rowIdx += rowOffset;
   }
-  console.log(computer[ship]);
+  //   console.log(`Ship: ${ship}\nSpaces Left: ${computer[ship].spacesLeft}`);
 
-  // we werent able to complete ship
   if (computer[ship].spacesLeft > 0) {
     for (const coordinates of computer[ship].coordinates) {
       let [col, row] = coordinates;
-      computerBoard[col][row] = 0;
+      computerBoard[col][row] = null;
     }
     computer[ship].coordinates = [];
     computer[ship].spacesLeft = computer[ship].spacesTotal;
@@ -438,7 +433,7 @@ function colorBoard(userObj, user, board) {
       const boardVal = board[colIdx][rowIdx];
       const cellId = `${user}-c${colIdx}r${rowIdx}`;
       const cellEl = document.getElementById(cellId);
-      if (boardVal === 0) {
+      if (boardVal === null) {
         cellEl.style.backgroundColor = "white";
       } else {
         // showing computer colors for development - this should just be for player moving into production
