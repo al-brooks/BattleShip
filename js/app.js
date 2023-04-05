@@ -296,6 +296,12 @@ function init() {
   // set Computer ships
   generateComputerBoard();
 
+  // set playerLegendColors
+  document.querySelectorAll(".colors").forEach(color => {
+    let ship = color.parentNode.id;
+    color.style.backgroundColor = player[ship].color;
+  });
+
   addShip = false;
   currentShip = null;
   setupComplete = false;

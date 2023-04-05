@@ -84,9 +84,9 @@ button:hover {
 
 .colors {
   margin-right: 3vmin;
-  height: 1vmin;
-  width: 1vmin;
-  border: 1vmin solid black;
+  height: 2vmin;
+  width: 2vmin;
+  background-color: black;
 }
 
 #div-line {
