@@ -1,5 +1,10 @@
 /*----- constants -----*/
 
+const users = {
+  1: "player",
+  "-1": "computer"
+};
+
 const player = {
   carrier: {
     color: "black",
@@ -89,7 +94,6 @@ const computer = {
 // boolean toggles for Player Ship Placement
 let addShip;
 let setupComplete;
-
 let currentShip;
 
 let turn;
@@ -101,24 +105,34 @@ let playerBoard;
 let computerBoard;
 
 /*----- cached elements  -----*/
+const gameMsg = document.getElementById("game-msg");
 const shipListEls = document.getElementById("ship-list");
 const shipListMsg = document.getElementById("shipMsg");
 const playAgainBtn = document.getElementById("play-again");
-const computerBoardEls = document.querySelectorAll(
-  "#computer > .display > .board > div"
-);
-const playerBoardEls = document.querySelectorAll(
-  "#player > .display > .board > div"
-);
-
+const computerBoardEl = document.querySelector("#computer > .display > .board");
 const playerBoardEl = document.querySelector("#player > .display > .board");
 
 /*----- event listeners -----*/
 shipListEls.addEventListener("click", handleShipSelection);
-playerBoardEl.addEventListener("click", handleBoardClick);
+playerBoardEl.addEventListener("click", handlePlayerBoardClick);
+computerBoardEl.addEventListener("click", handleComputerBoardClick);
 playAgainBtn.addEventListener("click", init);
 
 /*----- functions -----*/
+
+function handleComputerBoardClick(evt) {
+  if (!setupComplete) {
+    gameMsg.innerHTML =
+      "PLAYER - Finish Setting Up Your Board Before Gameplay Commences.";
+    return;
+  }
+  const square = evt.target;
+  const colIdx = Number(square.id.at(-3));
+  const rowIdx = Number(square.id.at(-1));
+  if (computerBoard[colIdx][rowIdx] === null) {
+    square.innerText = "O";
+  }
+}
 
 function handleShipSelection(evt) {
   const selectBtn = evt.target;
@@ -136,7 +150,7 @@ function handleShipSelection(evt) {
   }
 }
 
-function handleBoardClick(evt) {
+function handlePlayerBoardClick(evt) {
   const square = evt.target;
   const colIdx = Number(square.id.at(-3));
   const rowIdx = Number(square.id.at(-1));
@@ -249,38 +263,6 @@ function countAdjacent(colIdx, rowIdx, colOffset, rowOffset) {
   }
 
   return count;
-}
-
-function init() {
-  turn = 1;
-  winner = null; // (1 or -1) no ties
-  computerBoard = Array.from(new Array(10), () => new Array(10).fill(null)); // 0 or Computer Ships
-  playerBoard = Array.from(new Array(10), () => new Array(10).fill(null)); // 0 or Player Ships
-
-  // reset Computer Ships
-  for (const ship in computer) {
-    resetComputerShips(ship);
-  }
-  // set Computer ships
-  generateComputerBoard();
-
-  // set playerLegendColors
-  document.querySelectorAll(".colors").forEach(color => {
-    let ship = color.parentNode.id;
-    color.style.backgroundColor = player[ship].color;
-  });
-
-  addShip = false;
-  currentShip = null;
-  setupComplete = false;
-
-  shipListEls.childNodes.forEach(child => {
-    if (child.tagName === "BUTTON") {
-      child.style.visibility = "visible";
-    }
-  });
-
-  render();
 }
 
 function generateComputerBoard() {
@@ -406,6 +388,41 @@ function colorBoard(userObj, user, board) {
       }
     });
   });
+}
+
+function init() {
+  turn = 1;
+  winner = null; // (1 or -1) no ties
+  computerBoard = Array.from(new Array(10), () => new Array(10).fill(null)); // null or Computer Ships
+  playerBoard = Array.from(new Array(10), () => new Array(10).fill(null)); // null or Player Ships
+
+  // set game message
+  gameMsg.innerHTML = `Welcome PLAYER - Please Set Up Your Board Below`;
+
+  // reset Computer Ships
+  for (const ship in computer) {
+    resetComputerShips(ship);
+  }
+  // set Computer ships
+  generateComputerBoard();
+
+  // set playerLegendColors
+  document.querySelectorAll(".colors").forEach(color => {
+    let ship = color.parentNode.id;
+    color.style.backgroundColor = player[ship].color;
+  });
+
+  addShip = false;
+  currentShip = null;
+  setupComplete = false;
+
+  shipListEls.childNodes.forEach(child => {
+    if (child.tagName === "BUTTON") {
+      child.style.visibility = "visible";
+    }
+  });
+
+  render();
 }
 
 /*----- initialize game -----*/
