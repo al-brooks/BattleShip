@@ -1,3 +1,5 @@
+// todo: use classes in span tags for stylized messages
+
 /*----- constants -----*/
 
 const player = {
@@ -272,6 +274,7 @@ function playerReady() {
   for (const ship in player) {
     if (ship.spacesLeft > 0) return false;
   }
+  gameMsg.innerHTML = `Set Up is Complete! Player, It's Your Move.`;
   selectShipDisplayMsg.innerHTML = "";
   return true;
 }
