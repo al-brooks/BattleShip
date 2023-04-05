@@ -133,11 +133,7 @@ function handleComputerBoardClick(evt) {
     return;
   }
   if (winner) return;
-
-  // Player Turn
   playerTurn(evt);
-
-  // Computer Responds
   computerTurn();
 }
 
@@ -149,7 +145,6 @@ function computerTurn() {
   const squareId = `player-c${colIdx}r${rowIdx}`;
   const square = document.getElementById(squareId);
   markBoard(playerBoard, square, totalPlayerShips, colIdx, rowIdx);
-
   determineWinner("computer", player);
 }
 
@@ -158,11 +153,11 @@ function playerTurn(evt) {
   const colIdx = Number(square.id.at(-3));
   const rowIdx = Number(square.id.at(-1));
   markBoard(computerBoard, square, totalComputerShips, colIdx, rowIdx);
-
   determineWinner("player", computer);
 }
 
 function markBoard(board, square, userShipTotal, colIdx, rowIdx) {
+  console.log(totalComputerShips);
   if (board[colIdx][rowIdx] === -1) return;
   if (board[colIdx][rowIdx] === null) {
     square.innerText = "O";
@@ -170,11 +165,12 @@ function markBoard(board, square, userShipTotal, colIdx, rowIdx) {
     square.innerText = "X";
     let ship = board[colIdx][rowIdx];
     ship.hp--;
-    userShipTotal--;
-    if (ship.hp === 0) console.log("Your ship has been sunk!");
+
+    if (ship.hp === 0) {
+      userShipTotal--;
+    }
     render();
   }
-
   board[colIdx][rowIdx] = -1; // square received a click, now its unplayable
 }
 
@@ -321,6 +317,51 @@ function countAdjacent(colIdx, rowIdx, colOffset, rowOffset) {
   return count;
 }
 
+function init() {
+  winner = null;
+  computerBoard = Array.from(new Array(10), () => new Array(10).fill(null));
+  playerBoard = Array.from(new Array(10), () => new Array(10).fill(null));
+  addShip = false;
+  currentShip = null;
+  setupComplete = false;
+
+  // set game message - usually render message
+  gameMsg.innerHTML = `Welcome PLAYER - Please Set Up Your Board Below`;
+
+  // reset Computer Ships
+  for (const ship in computer) {
+    resetComputerShips(ship);
+  }
+  // set Computer ships
+  generateComputerBoard();
+
+  totalPlayerShips = 0; // incremented when player adds ships to board
+  totalComputerShips = 5;
+
+  // set playerLegendColors
+  document.querySelectorAll(".colors").forEach(color => {
+    let ship = color.parentNode.id;
+    color.style.backgroundColor = player[ship].color;
+  });
+
+  shipListEls.childNodes.forEach(child => {
+    if (child.tagName === "BUTTON") {
+      child.style.visibility = "visible";
+    }
+  });
+
+  render();
+}
+
+function resetComputerShips(ship) {
+  for (const coordinates of computer[ship].coordinates) {
+    let [col, row] = coordinates;
+    computerBoard[col][row] = null;
+  }
+  computer[ship].coordinates = [];
+  computer[ship].spacesLeft = computer[ship].spacesTotal;
+}
+
 function generateComputerBoard() {
   for (const ship in computer) {
     placeShip(ship);
@@ -340,7 +381,6 @@ function placeShip(ship) {
   let builds = [buildShipUp, buildShipLeft, buildShipDown, buildShipRight];
   let shuffledBuilds = shuffleBuilds(builds);
 
-  // todo: refactored below code and reran app 20+ times and cpu render looks good - just keep an eye out
   for (const build of shuffledBuilds) {
     let success = build(ship, colIdx, rowIdx);
     if (success) {
@@ -363,7 +403,6 @@ function shuffleBuilds(buildArr) {
     const j = Math.floor(Math.random() * (i + 1));
     [buildArr[i], buildArr[j]] = [buildArr[j], buildArr[i]];
   }
-
   return buildArr;
 }
 
@@ -407,15 +446,6 @@ function buildAdjacent(ship, colIdx, rowIdx, colOffset, rowOffset) {
   }
 }
 
-function resetComputerShips(ship) {
-  for (const coordinates of computer[ship].coordinates) {
-    let [col, row] = coordinates;
-    computerBoard[col][row] = null;
-  }
-  computer[ship].coordinates = [];
-  computer[ship].spacesLeft = computer[ship].spacesTotal;
-}
-
 function render() {
   // render computer and player boards
   renderBoard(computerBoard);
@@ -450,43 +480,6 @@ function colorBoard(userObj, user, board) {
 function renderShipTotals() {
   computerShipTotalMsg.innerHTML = `Ships Ready for Battle: ${totalComputerShips}`;
   playerShipTotalMsg.innerHTML = `Ships Ready for Battle: ${totalPlayerShips}`;
-}
-
-function init() {
-  winner = null; // (1 or -1) no ties
-  computerBoard = Array.from(new Array(10), () => new Array(10).fill(null)); // null, -1 (square already played) or Computer Ship (not hit)
-  playerBoard = Array.from(new Array(10), () => new Array(10).fill(null)); // null or Player Ships
-
-  // set game message
-  gameMsg.innerHTML = `Welcome PLAYER - Please Set Up Your Board Below`;
-
-  // reset Computer Ships
-  for (const ship in computer) {
-    resetComputerShips(ship);
-  }
-  // set Computer ships
-  generateComputerBoard();
-
-  totalPlayerShips = 0; // incremented when player adds ships to board
-  totalComputerShips = 5;
-
-  // set playerLegendColors
-  document.querySelectorAll(".colors").forEach(color => {
-    let ship = color.parentNode.id;
-    color.style.backgroundColor = player[ship].color;
-  });
-
-  addShip = false;
-  currentShip = null;
-  setupComplete = false;
-
-  shipListEls.childNodes.forEach(child => {
-    if (child.tagName === "BUTTON") {
-      child.style.visibility = "visible";
-    }
-  });
-
-  render();
 }
 
 /*----- initialize game -----*/
