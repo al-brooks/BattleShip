@@ -205,10 +205,9 @@ function determineWinner(user, opponentObj) {
 function handleShipSelection(evt) {
   const selectBtn = evt.target;
   const shipSection = selectBtn.parentNode;
-  if (selectBtn.tagName === "BUTTON")
-    selectShipDisplayMsg.style.display = "block";
 
   if (selectBtn.classList.contains("add")) {
+    selectShipDisplayMsg.style.display = "block";
     addShip = true;
     currentShip = player[shipSection.id];
     selectShipDisplayMsg.innerHTML =
@@ -246,6 +245,7 @@ function handleAdd(square, colIdx, rowIdx) {
 }
 
 function handleReset() {
+  if (currentShip === null) return;
   playerBoard.forEach((colArr, colIdx) => {
     colArr.forEach((rowVal, rowIdx) => {
       if (playerBoard[colIdx][rowIdx] === currentShip) {
@@ -261,6 +261,7 @@ function handleReset() {
 }
 
 function handleComplete(shipSection) {
+  if (currentShip === null || currentShip.spacesLeft > 0) return;
   const [colIdx, rowIdx] = currentShip.coordinates.at(-1);
   const valid = selectionValidity(colIdx, rowIdx);
   if (valid) {
