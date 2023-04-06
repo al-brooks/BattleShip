@@ -168,6 +168,7 @@ function playerTurn(evt) {
   const square = evt.target;
   const colIdx = Number(square.id.at(-3));
   const rowIdx = Number(square.id.at(-1));
+  if (computerBoard[colIdx][rowIdx] === -1) return;
   totalComputerShips = markBoard(
     computerBoard,
     square,
@@ -181,7 +182,7 @@ function playerTurn(evt) {
 
 // todo: add styled marks
 function markBoard(board, square, userShipTotal, colIdx, rowIdx) {
-  if (board[colIdx][rowIdx] === -1) return;
+  //   if (board[colIdx][rowIdx] === -1) return;
   if (board[colIdx][rowIdx] === null) {
     square.innerText = "O";
     square.classList.add("missedMark");
