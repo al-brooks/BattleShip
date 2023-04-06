@@ -212,6 +212,7 @@ function determineWinner(user, opponentObj) {
 function handleShipSelection(evt) {
   const selectBtn = evt.target;
   const shipSection = selectBtn.parentNode;
+  selectShipDisplayMsg.style.display = "block";
   if (selectBtn.classList.contains("add")) {
     addShip = true;
     currentShip = player[shipSection.id];
@@ -296,6 +297,7 @@ function playerReady() {
   }
   gameMsg.innerHTML = `Set Up is Complete! Player, It's Your Move.`;
   selectShipDisplayMsg.innerHTML = "";
+  selectShipDisplayMsg.style.display = "none";
   return true;
 }
 
@@ -353,7 +355,7 @@ function init() {
   totalComputerShips = 5;
 
   gameMsg.innerHTML = `Welcome PLAYER - Please Set Up Your Board Below`;
-  selectShipDisplayMsg.innerHTML = "";
+  selectShipDisplayMsg.style.display = "none";
 
   for (const ship in computer) {
     resetShips(computerBoard, computer, ship);
