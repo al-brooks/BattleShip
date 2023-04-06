@@ -14,17 +14,11 @@ Battleship is a strategic guessing game where you will battle against a Computer
 - Ship totals are given for the user and computer, which allows the user to keep track of the gameplay.
 - After the game is finished the user is allowed to start over again, with the play again button loading a brand new game!
 
-## Images!
+## Landing Page Images
+
 <img width="1276" alt="battle_ship_img_1" src="https://user-images.githubusercontent.com/47277927/230510742-8799376e-55f3-451f-a197-30985c7491b2.png">
 <img width="1276" alt="battle_ship_img_2" src="https://user-images.githubusercontent.com/47277927/230510767-3bfe1323-8165-4914-8c09-f87a8871c477.png">
 <img width="1276" alt="battle_ship_img_3" src="https://user-images.githubusercontent.com/47277927/230510784-bfe8e186-662e-4b51-954b-af168f584f8f.png">
-
-
-#### Technology Stack
-
-- HTML
-- CSS
-- JavaScript
 
 ### Getting Started
 
@@ -37,5 +31,13 @@ Battleship is a strategic guessing game where you will battle against a Computer
 <img width="1276" alt="battle_ship_img_7" src="https://user-images.githubusercontent.com/47277927/230511429-ab457bdc-59e3-4259-94d8-837982e6a582.png">
 <img width="1276" alt="battle_ship_img_8" src="https://user-images.githubusercontent.com/47277927/230511444-bb5c106b-2186-4ace-b98d-9304c4974994.png">
 
+#### Technology Stack
+
+- HTML
+- CSS
+- JavaScript
 
 ### Next Steps
+
+- Adding more difficulty settings for the Computer!
+- Would also love to add images of ships to replace the colored squares.
