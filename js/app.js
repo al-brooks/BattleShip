@@ -3,7 +3,7 @@
 const player = {
   carrier: {
     name: "carrier",
-    color: "black",
+    color: "#2d6a4f",
     hp: 5,
     spacesTotal: 5,
     spacesLeft: 5,
@@ -11,7 +11,7 @@ const player = {
   },
   battleship: {
     name: "battleship",
-    color: "gray",
+    color: "#E09F3E",
     hp: 4,
     spacesTotal: 4,
     spacesLeft: 4,
@@ -19,7 +19,7 @@ const player = {
   },
   cruiser: {
     name: "cruiser",
-    color: "navy",
+    color: "#335C67",
     hp: 3,
     spacesTotal: 3,
     spacesLeft: 3,
@@ -27,7 +27,7 @@ const player = {
   },
   submarine: {
     name: "submarine",
-    color: "darkred",
+    color: "#540B0E",
     hp: 3,
     spacesTotal: 3,
     spacesLeft: 3,
@@ -35,7 +35,7 @@ const player = {
   },
   destroyer: {
     name: "destroyer",
-    color: "darkgoldenrod",
+    color: "#9E2A2B",
     hp: 2,
     spacesTotal: 2,
     spacesLeft: 2,
@@ -46,7 +46,7 @@ const player = {
 const computer = {
   carrier: {
     name: "carrier",
-    color: "black", // color only needed for development
+    color: "#2d6a4f", // color only needed for development
     hp: 5,
     spacesTotal: 5,
     spacesLeft: 5,
@@ -55,7 +55,7 @@ const computer = {
   },
   battleship: {
     name: "battleship",
-    color: "gray",
+    color: "#E09F3E",
     hp: 4,
     spacesTotal: 4,
     spacesLeft: 4,
@@ -64,7 +64,7 @@ const computer = {
   },
   cruiser: {
     name: "cruiser",
-    color: "navy",
+    color: "#335C67",
     hp: 3,
     spacesTotal: 3,
     spacesLeft: 3,
@@ -73,7 +73,7 @@ const computer = {
   },
   submarine: {
     name: "submarine",
-    color: "darkred",
+    color: "#540B0E",
     hp: 3,
     spacesTotal: 3,
     spacesLeft: 3,
@@ -81,7 +81,7 @@ const computer = {
     built: false
   },
   destroyer: {
-    color: "darkgoldenrod",
+    color: "#9E2A2B",
 
     hp: 2,
     spacesTotal: 2,
@@ -236,7 +236,6 @@ function handleSelectionClick(evt) {
 function handleAdd(square, colIdx, rowIdx) {
   if (currentShip.spacesLeft === 0) return;
   if (playerBoard[colIdx][rowIdx] === null) {
-    square.style.borderStyle = "none";
     playerBoard[colIdx][rowIdx] = currentShip;
     currentShip.coordinates.push([colIdx, rowIdx]);
     currentShip.spacesLeft--;
@@ -518,10 +517,11 @@ function colorBoard(user, board) {
       const cellId = `${user}-c${colIdx}r${rowIdx}`;
       const cellEl = document.getElementById(cellId);
       if (boardVal === null) {
-        cellEl.style.backgroundColor = "#e3f2fd";
+        cellEl.style.backgroundColor = "#a9d6e5";
         cellEl.style.borderStyle = "solid";
       } else {
         cellEl.style.backgroundColor = boardVal.color;
+        cellEl.style.borderStyle = "none";
       }
     });
   });
@@ -532,7 +532,8 @@ function hideBoard(user, board) {
     colArr.forEach((rowVal, rowIdx) => {
       const cellId = `${user}-c${colIdx}r${rowIdx}`;
       const cellEl = document.getElementById(cellId);
-      cellEl.style.backgroundColor = "#e3f2fd";
+      cellEl.style.backgroundColor = "#a9d6e5";
+      cellEl.style.borderStyle = "solid";
     });
   });
 }
