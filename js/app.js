@@ -497,6 +497,7 @@ function buildAdjacent(ship, colIdx, rowIdx, colOffset, rowOffset) {
 
 function render() {
   // todo: render computer board as an optional button later on
+  renderBoard(computerBoard);
   renderBoard(playerBoard);
   renderShipTotals();
 }
