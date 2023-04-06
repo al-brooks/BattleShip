@@ -335,6 +335,7 @@ function countAdjacent(colIdx, rowIdx, colOffset, rowOffset) {
   return count;
 }
 
+// todo: need to reset all innerText & classList of grids
 function init() {
   winner = null;
   computerBoard = Array.from(new Array(10), () => new Array(10).fill(null));
@@ -359,6 +360,10 @@ function init() {
   // set Computer ships
   generateComputerBoard();
 
+  // resetMarks
+  //   resetMarks(computerBoard, "computer");
+  //   resetMarks(playerBoard, "player");
+
   // set playerLegendColors
   document.querySelectorAll(".colors").forEach(color => {
     let ship = color.parentNode.id;
@@ -370,6 +375,19 @@ function init() {
   });
 
   render();
+}
+
+// todo:  causeing in error in ship totals
+function resetMarks(board, user) {
+  board.forEach((colArr, colIdx) => {
+    colArr.forEach((rowVal, rowIdx) => {
+      const cellId = `${user}-c${colIdx}r${rowIdx}`;
+      const cellEl = document.getElementById(cellId);
+      cellEl.innerText = "";
+      let cls = ["hitMark", "missedMark"];
+      cellEl.classList.remove(...cls);
+    });
+  });
 }
 
 function resetShips(board, userObj, ship) {
