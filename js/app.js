@@ -1,5 +1,3 @@
-// todo: use classes in span tags for stylized messages
-
 /*----- constants -----*/
 
 const player = {
@@ -361,8 +359,8 @@ function init() {
   generateComputerBoard();
 
   // resetMarks
-  //   resetMarks(computerBoard, "computer");
-  //   resetMarks(playerBoard, "player");
+  resetMarks(computerBoard, "computer");
+  resetMarks(playerBoard, "player");
 
   // set playerLegendColors
   document.querySelectorAll(".colors").forEach(color => {
@@ -384,8 +382,12 @@ function resetMarks(board, user) {
       const cellId = `${user}-c${colIdx}r${rowIdx}`;
       const cellEl = document.getElementById(cellId);
       cellEl.innerText = "";
-      let cls = ["hitMark", "missedMark"];
-      cellEl.classList.remove(...cls);
+      let classes = ["hitMark", "missedMark"];
+      for (const cls of classes) {
+        if (cellEl.classList.contains(cls)) {
+          cellEl.classList.remove(cls);
+        }
+      }
     });
   });
 }
