@@ -3,7 +3,7 @@
 const player = {
   carrier: {
     name: "carrier",
-    color: "#2d6a4f",
+    color: "#006d77",
     hp: 5,
     spacesTotal: 5,
     spacesLeft: 5,
@@ -11,7 +11,7 @@ const player = {
   },
   battleship: {
     name: "battleship",
-    color: "#E09F3E",
+    color: "#6d597a",
     hp: 4,
     spacesTotal: 4,
     spacesLeft: 4,
@@ -19,7 +19,7 @@ const player = {
   },
   cruiser: {
     name: "cruiser",
-    color: "#335C67",
+    color: "#b56576",
     hp: 3,
     spacesTotal: 3,
     spacesLeft: 3,
@@ -27,7 +27,7 @@ const player = {
   },
   submarine: {
     name: "submarine",
-    color: "#540B0E",
+    color: "#6d6875",
     hp: 3,
     spacesTotal: 3,
     spacesLeft: 3,
@@ -46,7 +46,7 @@ const player = {
 const computer = {
   carrier: {
     name: "carrier",
-    color: "#2d6a4f", // color only needed for development
+    color: "#006d77", // color only needed for development
     hp: 5,
     spacesTotal: 5,
     spacesLeft: 5,
@@ -55,7 +55,7 @@ const computer = {
   },
   battleship: {
     name: "battleship",
-    color: "#E09F3E",
+    color: "#6d597a",
     hp: 4,
     spacesTotal: 4,
     spacesLeft: 4,
@@ -64,7 +64,7 @@ const computer = {
   },
   cruiser: {
     name: "cruiser",
-    color: "#335C67",
+    color: "#b56576",
     hp: 3,
     spacesTotal: 3,
     spacesLeft: 3,
@@ -73,7 +73,7 @@ const computer = {
   },
   submarine: {
     name: "submarine",
-    color: "#540B0E",
+    color: "#6d6875",
     hp: 3,
     spacesTotal: 3,
     spacesLeft: 3,
@@ -371,6 +371,7 @@ function init() {
   document.querySelectorAll(".colors").forEach(color => {
     let ship = color.parentNode.id;
     color.style.backgroundColor = player[ship].color;
+    color.style.border = "0.1vmin solid #f1faee";
   });
 
   selectShipBtns.forEach(btn => {
