@@ -130,7 +130,8 @@ button:hover {
 }
 
 #ship-list > section > button {
-  font-size: 1.75vmin;
+  font-size: 2vmin;
+  font-weight: 500;
   width: 12vmin;
   padding: 0.5vmin;
   margin: 0 1vmin;
