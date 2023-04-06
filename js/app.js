@@ -134,6 +134,7 @@ function handleComputerBoardClick(evt) {
   }
   if (winner) return;
   playerTurn(evt);
+  if (winner) return;
   computerTurn();
 }
 
@@ -253,7 +254,7 @@ function handleReset() {
   addShip = false;
   currentShip.spacesLeft = currentShip.spacesTotal;
   currentShip.coordinates = [];
-  selectShipDisplayMsg.innerHTML = `Reset Complete! Click <span class="msg-style">Add</span> to add your ship!`;
+  selectShipDisplayMsg.innerHTML = `Reset Complete!<br><br>Click <span class="msg-style">Add</span> to add your ship!`;
   render();
 }
 
