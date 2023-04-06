@@ -159,6 +159,11 @@ button:hover {
   color: red;
 }
 
+.msg-style {
+  color: #00f5d4;
+  margin: 0 1vmin;
+}
+
 #div-line {
   border: 0.1vmin solid #a9d6e5;
   margin: 3vmin 0 3vmin 4vmin;
@@ -181,6 +186,11 @@ button:hover {
 
 #ship-list > section > button {
   margin: 0 1vmin;
+}
+
+#select-msg,
+#game-msg {
+  text-transform: capitalize;
 }
 
 #computer-reveal,

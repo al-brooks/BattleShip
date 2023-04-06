@@ -46,7 +46,7 @@ const player = {
 const computer = {
   carrier: {
     name: "carrier",
-    color: "#006d77", // color only needed for development
+    color: "#006d77",
     hp: 5,
     spacesTotal: 5,
     spacesLeft: 5,
@@ -113,7 +113,6 @@ const selectShipBtns = document.querySelectorAll(
   "#ship-list > section > button"
 );
 
-// todo: figure out how to refactor player and computer sections
 const computerBoardEl = document.querySelector("#computer > .display > .board");
 const playerBoardEl = document.querySelector("#player > .display > .board");
 const playAgainBtn = document.getElementById("play-again");
@@ -132,8 +131,7 @@ function handleComputerShipsReveal() {
 
 function handleComputerBoardClick(evt) {
   if (!setupComplete) {
-    gameMsg.innerHTML =
-      "PLAYER - Finish Setting Up Your Board Before Gameplay Commences.";
+    gameMsg.innerHTML = `<span class="msg-style">PLAYER</span> - Finish Setting Up Your Board Before Gameplay Commences.`;
     return;
   }
   if (winner) return;
@@ -200,7 +198,7 @@ function determineWinner(user, opponentObj) {
     if (opponentObj[ship].hp > 0) return;
   }
   winner = user;
-  gameMsg.innerHTML = `${winner.toUpperCase()} has won the game! Ready for More? Click Play Again Below!`;
+  gameMsg.innerHTML = `<span class="msg-style">${winner.toUpperCase()}</span> has won the game! Ready for More? Click <span class="msg-style">Play Again</span> Below!`;
   playAgainBtn.style.display = "block";
 }
 
@@ -214,7 +212,7 @@ function handleShipSelection(evt) {
     addShip = true;
     currentShip = player[shipSection.id];
     selectShipDisplayMsg.innerHTML =
-      "Click squares (in order) below to configure ship!";
+      "Click Squares Below to Build Your Ship!<br><br>Be Sure to Click On Squares That Are Next To One Another!";
   } else if (selectBtn.classList.contains("reset")) {
     handleReset();
   } else if (selectBtn.classList.contains("complete")) {
@@ -292,7 +290,7 @@ function playerReady() {
   for (const ship in player) {
     if (ship.spacesLeft > 0) return false;
   }
-  gameMsg.innerHTML = `Set Up is Complete! Player, It's Your Move.`;
+  gameMsg.innerHTML = `Set Up is Complete!<br><br><span class="msg-style">PLAYER</span> Start By Selecting Your Opponents Board!`;
   selectShipDisplayMsg.innerHTML = "";
   selectShipDisplayMsg.style.display = "none";
   return true;
@@ -351,7 +349,7 @@ function init() {
   totalPlayerShips = 0;
   totalComputerShips = 5;
 
-  gameMsg.innerHTML = `Welcome PLAYER - Please Set Up Your Board Below`;
+  gameMsg.innerHTML = `Welcome <span class="msg-style">PLAYER</span> - Please Set Up Your Board Below<br><br>Click <span class="msg-style">Add</span> to get started!`;
   selectShipDisplayMsg.style.display = "none";
 
   for (const ship in computer) {
@@ -540,8 +538,8 @@ function hideBoard(user, board) {
 }
 
 function renderShipTotals() {
-  computerShipTotalMsg.innerHTML = `Ships Ready for Battle: ${totalComputerShips}`;
-  playerShipTotalMsg.innerHTML = `Ships Ready for Battle: ${totalPlayerShips}`;
+  computerShipTotalMsg.innerHTML = `Ships Ready for Battle: <span class="msg-style">${totalComputerShips}</span>`;
+  playerShipTotalMsg.innerHTML = `Ships Ready for Battle: <span class="msg-style">${totalPlayerShips}</span>`;
 }
 
 init();
