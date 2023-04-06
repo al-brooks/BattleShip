@@ -94,6 +94,7 @@ const computer = {
 /*----- state variables -----*/
 let addShip;
 let setupComplete;
+let showComputerShips;
 let currentShip;
 
 let totalPlayerShips;
@@ -118,14 +119,21 @@ const selectShipBtns = document.querySelectorAll(
 const computerBoardEl = document.querySelector("#computer > .display > .board");
 const playerBoardEl = document.querySelector("#player > .display > .board");
 const playAgainBtn = document.getElementById("play-again");
+const toggleComputerShipsBtn = document.getElementById("computer-reveal");
 
 /*----- event listeners -----*/
 shipListEls.addEventListener("click", handleShipSelection);
 playerBoardEl.addEventListener("click", handleSelectionClick);
 computerBoardEl.addEventListener("click", handleComputerBoardClick);
 playAgainBtn.addEventListener("click", init);
+toggleComputerShipsBtn.addEventListener("click", handleComputerShipsReveal);
 
 /*----- functions -----*/
+
+function handleComputerShipsReveal() {
+  showComputerShips = !showComputerShips;
+  renderBoard(computerBoard);
+}
 
 function handleComputerBoardClick(evt) {
   if (!setupComplete) {
@@ -173,7 +181,6 @@ function playerTurn(evt) {
 
 // todo: add styled marks
 function markBoard(board, square, userShipTotal, colIdx, rowIdx) {
-  console.log(board[colIdx][rowIdx]);
   if (board[colIdx][rowIdx] === -1) return;
   if (board[colIdx][rowIdx] === null) {
     square.innerText = "O";
@@ -341,6 +348,7 @@ function init() {
   addShip = false;
   currentShip = null;
   setupComplete = false;
+  showComputerShips = false;
   totalPlayerShips = 0; // incremented when player adds ships to board
   totalComputerShips = 5;
 
@@ -488,20 +496,23 @@ function buildAdjacent(ship, colIdx, rowIdx, colOffset, rowOffset) {
 
 function render() {
   // todo: render computer board as an optional button later on
-  renderBoard(computerBoard);
   renderBoard(playerBoard);
   renderShipTotals();
 }
 
 function renderBoard(board) {
   if (board === computerBoard) {
-    colorBoard(computer, "computer", computerBoard);
+    if (showComputerShips) {
+      colorBoard("computer", computerBoard);
+    } else {
+      hideBoard("computer", computerBoard);
+    }
   } else {
-    colorBoard(player, "player", playerBoard);
+    colorBoard("player", playerBoard);
   }
 }
 
-function colorBoard(userObj, user, board) {
+function colorBoard(user, board) {
   board.forEach((colArr, colIdx) => {
     colArr.forEach((rowVal, rowIdx) => {
       const boardVal = board[colIdx][rowIdx];
@@ -512,6 +523,16 @@ function colorBoard(userObj, user, board) {
       } else {
         cellEl.style.backgroundColor = boardVal.color;
       }
+    });
+  });
+}
+
+function hideBoard(user, board) {
+  board.forEach((colArr, colIdx) => {
+    colArr.forEach((rowVal, rowIdx) => {
+      const cellId = `${user}-c${colIdx}r${rowIdx}`;
+      const cellEl = document.getElementById(cellId);
+      cellEl.style.backgroundColor = "white";
     });
   });
 }
