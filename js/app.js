@@ -519,6 +519,7 @@ function colorBoard(user, board) {
       const cellEl = document.getElementById(cellId);
       if (boardVal === null) {
         cellEl.style.backgroundColor = "#e3f2fd";
+        cellEl.style.borderStyle = "solid";
       } else {
         cellEl.style.backgroundColor = boardVal.color;
       }
