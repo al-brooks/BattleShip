@@ -1,5 +1,3 @@
-/*----- constants -----*/
-
 const player = {
   carrier: {
     name: "carrier",
@@ -237,8 +235,7 @@ function handleAdd(square, colIdx, rowIdx) {
     currentShip.coordinates.push([colIdx, rowIdx]);
     currentShip.spacesLeft--;
     if (currentShip.spacesLeft === 0) {
-      selectShipDisplayMsg.innerHTML =
-        "You have used up all available spaces. Please select complete to confirm!";
+      selectShipDisplayMsg.innerHTML = `Your Ship is built!<br><br>Please click <span class="msg-style">complete</span> to confirm!`;
     }
     render();
   }
@@ -256,7 +253,7 @@ function handleReset() {
   addShip = false;
   currentShip.spacesLeft = currentShip.spacesTotal;
   currentShip.coordinates = [];
-  selectShipDisplayMsg.innerHTML = `Reset Complete! Click "Add Ship" to add your ship!`;
+  selectShipDisplayMsg.innerHTML = `Reset Complete! Click <span class="msg-style">Add</span> to add your ship!`;
   render();
 }
 
@@ -265,7 +262,6 @@ function handleComplete(shipSection) {
   const [colIdx, rowIdx] = currentShip.coordinates.at(-1);
   const valid = selectionValidity(colIdx, rowIdx);
   if (valid) {
-    // hide all buttons
     hideSelectBtns(shipSection);
     selectShipDisplayMsg.innerHTML = "Complete! Continue to Next Ship!";
     addShip = false;
@@ -274,27 +270,8 @@ function handleComplete(shipSection) {
     render();
     setupComplete = playerReady();
   } else {
-    // todo: add class for styling message words
-    selectShipDisplayMsg.innerHTML = `Invalid Ship Placement, Please Click <strong>Reset</strong> then <strong>Add Ship</strong> to start over!`;
+    selectShipDisplayMsg.innerHTML = `Invalid Ship Build!<br><br>Please Click <span class="msg-style">Reset</span> then <span class="msg-style">Add</span> to rebuild your ship!`;
   }
-}
-
-function hideSelectBtns(shipSection) {
-  shipSection.childNodes.forEach(child => {
-    if (child.tagName === "BUTTON") {
-      child.style.visibility = "hidden";
-    }
-  });
-}
-
-function playerReady() {
-  for (const ship in player) {
-    if (ship.spacesLeft > 0) return false;
-  }
-  gameMsg.innerHTML = `Set Up is Complete!<br><br><span class="msg-style">PLAYER</span> Start By Selecting Your Opponents Board!`;
-  selectShipDisplayMsg.innerHTML = "";
-  selectShipDisplayMsg.style.display = "none";
-  return true;
 }
 
 function selectionValidity(colIdx, rowIdx) {
@@ -337,6 +314,24 @@ function countAdjacent(colIdx, rowIdx, colOffset, rowOffset) {
   }
 
   return count;
+}
+
+function hideSelectBtns(shipSection) {
+  shipSection.childNodes.forEach(child => {
+    if (child.tagName === "BUTTON") {
+      child.style.visibility = "hidden";
+    }
+  });
+}
+
+function playerReady() {
+  for (const ship in player) {
+    if (ship.spacesLeft > 0) return false;
+  }
+  gameMsg.innerHTML = `Set Up is Complete!<br><br><span class="msg-style">PLAYER</span> Start By Selecting Your Opponents Board!`;
+  selectShipDisplayMsg.innerHTML = "";
+  selectShipDisplayMsg.style.display = "none";
+  return true;
 }
 
 function init() {
