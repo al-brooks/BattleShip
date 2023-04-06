@@ -173,9 +173,8 @@ function computerTurn() {
   render();
 }
 
-// todo: add styled marks
 function markBoard(board, square, userShipTotal, colIdx, rowIdx) {
-  //   if (board[colIdx][rowIdx] === -1) return;
+  let user = board === computerBoard ? "player" : "computer";
   if (board[colIdx][rowIdx] === null) {
     square.innerText = "O";
     square.classList.add("missedMark");
@@ -187,6 +186,7 @@ function markBoard(board, square, userShipTotal, colIdx, rowIdx) {
 
     if (ship.hp === 0) {
       userShipTotal--;
+      gameMsg.innerHTML = `<span class="msg-style">${user.toUpperCase()}</span> You've Sunk Their Battleship!<br><br>Keep it up!`;
     }
   }
   board[colIdx][rowIdx] = -1;
