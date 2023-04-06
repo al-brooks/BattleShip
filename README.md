@@ -26,6 +26,6 @@ Battleship is a strategic guessing game where you will battle against a Computer
 
 - To get started, scroll down and click Add to begin building your fleet! Just make sure to pick squares next to each other (Vertically or Horizontally).
 - Once your fleet is built, you can start playing the game by picking a square on the Computer's board to attack.
-- The Computer will immediately strike back, and you continue you this process until a fleet is completely sunk!
+- The Computer will immediately strike back, and you continue this process until someone's fleet is completely sunk!
 
 ### Next Steps
