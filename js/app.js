@@ -146,6 +146,22 @@ function handleComputerBoardClick(evt) {
   computerTurn();
 }
 
+function playerTurn(evt) {
+  const square = evt.target;
+  const colIdx = Number(square.id.at(-3));
+  const rowIdx = Number(square.id.at(-1));
+  if (computerBoard[colIdx][rowIdx] === -1) return;
+  totalComputerShips = markBoard(
+    computerBoard,
+    square,
+    totalComputerShips,
+    colIdx,
+    rowIdx
+  );
+  determineWinner("player", computer);
+  render();
+}
+
 function computerTurn() {
   let [colIdx, rowIdx] = generateCoordinate();
   while (playerBoard[colIdx][rowIdx] === -1) {
@@ -161,22 +177,6 @@ function computerTurn() {
     rowIdx
   );
   determineWinner("computer", player);
-  render();
-}
-
-function playerTurn(evt) {
-  const square = evt.target;
-  const colIdx = Number(square.id.at(-3));
-  const rowIdx = Number(square.id.at(-1));
-  if (computerBoard[colIdx][rowIdx] === -1) return;
-  totalComputerShips = markBoard(
-    computerBoard,
-    square,
-    totalComputerShips,
-    colIdx,
-    rowIdx
-  );
-  determineWinner("player", computer);
   render();
 }
 
@@ -196,7 +196,7 @@ function markBoard(board, square, userShipTotal, colIdx, rowIdx) {
       userShipTotal--;
     }
   }
-  board[colIdx][rowIdx] = -1; // square received a click, now its unplayable
+  board[colIdx][rowIdx] = -1;
   return userShipTotal;
 }
 
@@ -205,7 +205,8 @@ function determineWinner(user, opponentObj) {
     if (opponentObj[ship].hp > 0) return;
   }
   winner = user;
-  gameMsg.innerHTML = `${winner.toUpperCase()} has won the game!`;
+  gameMsg.innerHTML = `${winner.toUpperCase()} has won the game! Ready for More? Click Play Again Below!`;
+  playAgainBtn.style.display = "block";
 }
 
 function handleShipSelection(evt) {
@@ -259,8 +260,7 @@ function handleReset() {
   addShip = false;
   currentShip.spacesLeft = currentShip.spacesTotal;
   currentShip.coordinates = [];
-  selectShipDisplayMsg.innerHTML =
-    "Reset Complete! Please click Add Ship to add your ship!";
+  selectShipDisplayMsg.innerHTML = `Reset Complete! Click "Add Ship" to add your ship!`;
   render();
 }
 
@@ -277,8 +277,8 @@ function handleComplete(shipSection) {
     render();
     setupComplete = playerReady();
   } else {
-    selectShipDisplayMsg.innerHTML =
-      "Invalid Ship Placement, Please Reset and Add Ship again";
+    // todo: add class for styling message words
+    selectShipDisplayMsg.innerHTML = `Invalid Ship Placement, Please Click <strong>Reset</strong> then <strong>Add Ship</strong> to start over!`;
   }
 }
 
@@ -341,7 +341,6 @@ function countAdjacent(colIdx, rowIdx, colOffset, rowOffset) {
   return count;
 }
 
-// todo: need to reset all innerText & classList of grids
 function init() {
   winner = null;
   computerBoard = Array.from(new Array(10), () => new Array(10).fill(null));
@@ -350,13 +349,12 @@ function init() {
   currentShip = null;
   setupComplete = false;
   showComputerShips = false;
-  totalPlayerShips = 0; // incremented when player adds ships to board
+  totalPlayerShips = 0;
   totalComputerShips = 5;
 
-  // set game message - usually render message
   gameMsg.innerHTML = `Welcome PLAYER - Please Set Up Your Board Below`;
+  selectShipDisplayMsg.innerHTML = "";
 
-  // reset Ships
   for (const ship in computer) {
     resetShips(computerBoard, computer, ship);
   }
@@ -364,10 +362,9 @@ function init() {
   for (const ship in player) {
     resetShips(playerBoard, player, ship);
   }
-  // set Computer ships
-  generateComputerBoard();
 
-  // resetMarks
+  generateComputerShips();
+
   resetMarks(computerBoard, "computer");
   resetMarks(playerBoard, "player");
 
@@ -381,10 +378,11 @@ function init() {
     btn.style.visibility = "visible";
   });
 
+  playAgainBtn.style.display = "none";
+
   render();
 }
 
-// todo:  causeing in error in ship totals
 function resetMarks(board, user) {
   board.forEach((colArr, colIdx) => {
     colArr.forEach((rowVal, rowIdx) => {
@@ -411,7 +409,7 @@ function resetShips(board, userObj, ship) {
   userObj[ship].spacesLeft = userObj[ship].spacesTotal;
 }
 
-function generateComputerBoard() {
+function generateComputerShips() {
   for (const ship in computer) {
     placeShip(ship);
   }
@@ -496,7 +494,6 @@ function buildAdjacent(ship, colIdx, rowIdx, colOffset, rowOffset) {
 }
 
 function render() {
-  // todo: render computer board as an optional button later on
   renderBoard(computerBoard);
   renderBoard(playerBoard);
   renderShipTotals();

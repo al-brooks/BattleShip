@@ -127,7 +127,7 @@ button:hover {
 }
 
 #play-again {
-  margin: 0 0 5vmin 0;
+  margin: 5vmin 0 0 0;
   padding: 1vmin 3vmin;
   font-size: 2vmin;
   border-radius: 1vmin;
