@@ -5,7 +5,7 @@
 }
 
 body {
-  font-family: "Raleway", sans-serif;
+  font-family: "Roboto", sans-serif;
   height: 100vh;
   margin: 0;
   display: flex;
@@ -22,16 +22,25 @@ main {
   font-weight: 600;
 }
 
+h1 {
+  font-size: 6vmin;
+}
+
 h2 {
+  font-size: 4vmin;
   margin: 0 0 1vmin 0;
 }
 
 h3 {
-  margin: 2vmin 0 -2vmin 0;
+  font-size: 2.5vmin;
+  margin: 2vmin 0 -2vmin 4vmin;
 }
 
 h4 {
-  width: 25vmin;
+  font-size: 2.5vmin;
+  width: 18vmin;
+  text-align: end;
+  line-height: 2.5vmin;
 }
 
 button:hover {
@@ -70,11 +79,10 @@ button:hover {
   grid-column: 2 / 3;
   grid-row: 2 / 3;
   border: 0.3vmin solid #01497c;
+  margin-top: 0.5vmin;
 }
 
 .board > div {
-  height: 5vmin;
-  width: 5vmin;
   border: 0.1vmin solid #81c3d7;
   text-align: center;
   line-height: 5vmin;
@@ -82,17 +90,16 @@ button:hover {
   font-weight: 900;
 }
 
-#player {
+.flex-ctr-col {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .colors {
-  margin-right: 3vmin;
+  margin: 0 2vmin 0 1.5vmin;
   height: 2vmin;
   width: 2vmin;
-  background-color: black;
 }
 
 .missedMark {
@@ -105,15 +112,13 @@ button:hover {
 
 #div-line {
   border: 0.25vmin solid black;
-  margin: 3vmin 0;
-  width: 50%;
+  margin: 3vmin 0 3vmin 4vmin;
+  width: 60%;
 }
 
 #ship-list {
   display: flex;
   flex-direction: column;
-  /* justify-content: center; */
-  /* align-items: space-evenly; */
 }
 
 #ship-list > section {
@@ -125,6 +130,9 @@ button:hover {
 }
 
 #ship-list > section > button {
+  font-size: 1.75vmin;
+  width: 12vmin;
+  padding: 0.5vmin;
   margin: 0 1vmin;
 }
 
