@@ -91,7 +91,6 @@ const computer = {
   }
 };
 
-/*----- state variables -----*/
 let addShip;
 let setupComplete;
 let showComputerShips;
@@ -105,7 +104,6 @@ let winner;
 let playerBoard;
 let computerBoard;
 
-/*----- cached elements  -----*/
 const computerShipTotalMsg = document.querySelector("#computer > .ship-total");
 const playerShipTotalMsg = document.querySelector("#player > .ship-total");
 const gameMsg = document.getElementById("game-msg");
@@ -121,14 +119,11 @@ const playerBoardEl = document.querySelector("#player > .display > .board");
 const playAgainBtn = document.getElementById("play-again");
 const toggleComputerShipsBtn = document.getElementById("computer-reveal");
 
-/*----- event listeners -----*/
 shipListEls.addEventListener("click", handleShipSelection);
 playerBoardEl.addEventListener("click", handleSelectionClick);
 computerBoardEl.addEventListener("click", handleComputerBoardClick);
 playAgainBtn.addEventListener("click", init);
 toggleComputerShipsBtn.addEventListener("click", handleComputerShipsReveal);
-
-/*----- functions -----*/
 
 function handleComputerShipsReveal() {
   showComputerShips = !showComputerShips;
@@ -212,7 +207,9 @@ function determineWinner(user, opponentObj) {
 function handleShipSelection(evt) {
   const selectBtn = evt.target;
   const shipSection = selectBtn.parentNode;
-  selectShipDisplayMsg.style.display = "block";
+  if (selectBtn.tagName === "BUTTON")
+    selectShipDisplayMsg.style.display = "block";
+
   if (selectBtn.classList.contains("add")) {
     addShip = true;
     currentShip = player[shipSection.id];
@@ -239,6 +236,7 @@ function handleSelectionClick(evt) {
 function handleAdd(square, colIdx, rowIdx) {
   if (currentShip.spacesLeft === 0) return;
   if (playerBoard[colIdx][rowIdx] === null) {
+    square.style.borderStyle = "none";
     playerBoard[colIdx][rowIdx] = currentShip;
     currentShip.coordinates.push([colIdx, rowIdx]);
     currentShip.spacesLeft--;
@@ -520,7 +518,7 @@ function colorBoard(user, board) {
       const cellId = `${user}-c${colIdx}r${rowIdx}`;
       const cellEl = document.getElementById(cellId);
       if (boardVal === null) {
-        cellEl.style.backgroundColor = "white";
+        cellEl.style.backgroundColor = "#e3f2fd";
       } else {
         cellEl.style.backgroundColor = boardVal.color;
       }
@@ -533,7 +531,7 @@ function hideBoard(user, board) {
     colArr.forEach((rowVal, rowIdx) => {
       const cellId = `${user}-c${colIdx}r${rowIdx}`;
       const cellEl = document.getElementById(cellId);
-      cellEl.style.backgroundColor = "white";
+      cellEl.style.backgroundColor = "#e3f2fd";
     });
   });
 }
@@ -543,5 +541,4 @@ function renderShipTotals() {
   playerShipTotalMsg.innerHTML = `Ships Ready for Battle: ${totalPlayerShips}`;
 }
 
-/*----- initialize game -----*/
 init();
