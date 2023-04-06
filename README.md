@@ -15,9 +15,10 @@ Battleship is a strategic guessing game where you will battle against a Computer
 - After the game is finished the user is allowed to start over again, with the play again button loading a brand new game!
 
 ## Images!
-[battle_ship_img_1](https://user-images.githubusercontent.com/47277927/230510396-341cd47d-5cb8-431d-aba0-7fda339b8c50.png)
-![battle_ship_img_2](https://user-images.githubusercontent.com/47277927/230510420-2f33fc2c-3753-4d9a-ab94-7241a69855b0.png)
-![battle_ship_img_3](https://user-images.githubusercontent.com/47277927/230510428-cda53cac-83b1-478d-8f5d-699c8548e94f.png)
+<img width="1276" alt="battle_ship_img_1" src="https://user-images.githubusercontent.com/47277927/230510742-8799376e-55f3-451f-a197-30985c7491b2.png">
+<img width="1276" alt="battle_ship_img_2" src="https://user-images.githubusercontent.com/47277927/230510767-3bfe1323-8165-4914-8c09-f87a8871c477.png">
+<img width="1276" alt="battle_ship_img_3" src="https://user-images.githubusercontent.com/47277927/230510784-bfe8e186-662e-4b51-954b-af168f584f8f.png">
+
 
 #### Technology Stack
 
