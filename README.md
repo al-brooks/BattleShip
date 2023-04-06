@@ -32,4 +32,10 @@ Battleship is a strategic guessing game where you will battle against a Computer
 - Once your fleet is built, you can start playing the game by picking a square on the Computer's board to attack.
 - The Computer will immediately strike back, and you continue this process until someone's fleet is completely sunk!
 
+<img width="1276" alt="battle_ship_img_5" src="https://user-images.githubusercontent.com/47277927/230511403-17918724-a787-4c8d-a2a0-7d4befccb114.png">
+<img width="1276" alt="battle_ship_img_6" src="https://user-images.githubusercontent.com/47277927/230511419-763b8154-ba7f-4d0c-bdf5-c66e738427bc.png">
+<img width="1276" alt="battle_ship_img_7" src="https://user-images.githubusercontent.com/47277927/230511429-ab457bdc-59e3-4259-94d8-837982e6a582.png">
+<img width="1276" alt="battle_ship_img_8" src="https://user-images.githubusercontent.com/47277927/230511444-bb5c106b-2186-4ace-b98d-9304c4974994.png">
+
+
 ### Next Steps
