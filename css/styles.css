@@ -28,6 +28,7 @@ h1 {
   color: white;
   padding: 3vmin;
   font-size: 7vmin;
+  margin-left: 4vmin;
   background: linear-gradient(#81c3d7, #1d3557);
   border-radius: 0.5vmin;
   letter-spacing: 0.5vmin;
