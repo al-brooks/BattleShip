@@ -152,11 +152,13 @@ button:hover {
 }
 
 .missedMark {
-  color: gray;
+  color: #023e8a;
+  font-weight: 900;
 }
 
 .hitMark {
-  color: red;
+  color: #ff006e;
+  font-weight: 900;
 }
 
 .msg-style {

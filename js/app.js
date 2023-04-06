@@ -198,7 +198,7 @@ function determineWinner(user, opponentObj) {
     if (opponentObj[ship].hp > 0) return;
   }
   winner = user;
-  gameMsg.innerHTML = `<span class="msg-style">${winner.toUpperCase()}</span> has won the game! Ready for More? Click <span class="msg-style">Play Again</span> Below!`;
+  gameMsg.innerHTML = `<span class="msg-style">${winner.toUpperCase()}</span> has won the game!<br><br>Ready for More? Click <span class="msg-style">Play Again</span> Below!`;
   playAgainBtn.style.display = "block";
 }
 
