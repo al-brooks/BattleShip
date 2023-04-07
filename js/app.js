@@ -176,10 +176,10 @@ function markBoard(board, square, userShipTotal, colIdx, rowIdx) {
   let user = board === computerBoard ? "player" : "computer";
   if (board[colIdx][rowIdx] === null) {
     square.innerText = "O";
-    square.classList.add("missedMark");
+    square.classList.add("missed-mark");
   } else {
     square.innerText = "X";
-    square.classList.add("hitMark");
+    square.classList.add("hit-mark");
     let ship = board[colIdx][rowIdx];
     ship.hp--;
 
@@ -384,7 +384,7 @@ function resetMarks(board, user) {
       const cellId = `${user}-c${colIdx}r${rowIdx}`;
       const cellEl = document.getElementById(cellId);
       cellEl.innerText = "";
-      let classes = ["hitMark", "missedMark"];
+      let classes = ["hit-mark", "missed-mark"];
       for (const cls of classes) {
         if (cellEl.classList.contains(cls)) {
           cellEl.classList.remove(cls);
