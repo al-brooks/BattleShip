@@ -402,6 +402,7 @@ function resetShips(board, userObj, ship) {
   }
   userObj[ship].coordinates = [];
   userObj[ship].spacesLeft = userObj[ship].spacesTotal;
+  userObj[ship].hp = userObj[ship].spacesTotal;
 }
 
 function generateComputerShips() {
