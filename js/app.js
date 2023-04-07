@@ -93,12 +93,9 @@ let addShip;
 let setupComplete;
 let showComputerShips;
 let currentShip;
-
 let totalPlayerShips;
 let totalComputerShips;
-
 let winner;
-
 let playerBoard;
 let computerBoard;
 
@@ -110,7 +107,6 @@ const selectShipDisplayMsg = document.getElementById("select-msg");
 const selectShipBtns = document.querySelectorAll(
   "#ship-list > section > button"
 );
-
 const computerBoardEl = document.querySelector("#computer > .display > .board");
 const playerBoardEl = document.querySelector("#player > .display > .board");
 const playAgainBtn = document.getElementById("play-again");
