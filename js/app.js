@@ -133,8 +133,8 @@ function handleComputerBoardClick(evt) {
     return;
   }
   if (winner) return;
-  playerTurn(evt);
-  if (winner) return;
+  let success = playerTurn(evt);
+  if (winner || !success) return;
   computerTurn();
 }
 
@@ -142,7 +142,7 @@ function playerTurn(evt) {
   const square = evt.target;
   const colIdx = Number(square.id.at(-3));
   const rowIdx = Number(square.id.at(-1));
-  if (computerBoard[colIdx][rowIdx] === -1) return;
+  if (computerBoard[colIdx][rowIdx] === -1) return false;
   totalComputerShips = markBoard(
     computerBoard,
     square,
@@ -152,6 +152,7 @@ function playerTurn(evt) {
   );
   determineWinner("player", computer);
   render();
+  return true;
 }
 
 function computerTurn() {
